@@ -41,8 +41,9 @@ public class PredictionMaker{
      LinkedList<String> production = new LinkedList<String>(Arrays.asList(leaves) );
      listOfLists.add(production);
    }
-   grammar.put(head, listOfLists);
+   if(!head.equals("") )grammar.put(head, listOfLists);
   }
+  
  }
 
 
