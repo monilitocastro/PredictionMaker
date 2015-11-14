@@ -12,25 +12,49 @@ public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
  private Set<String> Nonterminals;
  
- 
  public Set<String> firstOf(String X){
    Set<String> result = new HashSet<String>();
    if(Nonterminals.contains(X)){
      //for each nonterminal production of X find the first of LinkedList<LinkedList<String>>
-     
+     result.add(firstOf(grammar.get(X)));
    }else{
      result.add(X);
    }
    return result;
  }
  
- public Set<String> firstOf(LinkedList<LinkedList<String> > production){
+ public Set<String> firstOf(String X, Boolean b){
    Set<String> result = new HashSet<String>();
-   LinkedList
+   result = firstOf(X);
+   b = result.contains("<empty>");
+   if(b){
+     result.remove("<empty>");
+   }
+   return result;
+ }
+ 
+ public Set<String> firstOf(LinkedList<LinkedList<String> > disjunction){
+   Set<String> result = new HashSet<String>();
+   Iterator<LinkedList<String> > it = disjunction.iterator();
+   while(it.hasNext() ){
+     result.add(firstOf(it.next() ) );
+   }
+   return result;
+ }
+ 
+ public Set<String> firstOf(LinkedList<String> conjunction)){
+   Set<String> result = new HashSet<String>();
+   Iterator<String> it = conjunction.iterator();
+   Boolean hasEmpty = new Boolean(true);
+   while(it.hasNext() && b ){
+     result.add(firstOf(it.next(), ) );
+   }
+   return result
  }
  
  public void generateNonTerminals(){
   Set<String> keys = grammar.keySet();
+  keys.remove("<empty>");//treat <empty> (aka epsilon) as a terminal
   Nonterminals.addAll(keys);
  }
   
