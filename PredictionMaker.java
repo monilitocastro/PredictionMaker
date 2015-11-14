@@ -10,7 +10,30 @@ import java.io.FileNotFoundException;
 
 public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
-
+ private Set<String> Nonterminals;
+ 
+ 
+ public Set<String> firstOf(String X){
+   Set<String> result = new HashSet<String>();
+   if(Nonterminals.contains(X)){
+     //for each nonterminal production of X find the first of LinkedList<LinkedList<String>>
+     
+   }else{
+     result.add(X);
+   }
+   return result;
+ }
+ 
+ public Set<String> firstOf(LinkedList<LinkedList<String> > production){
+   Set<String> result = new HashSet<String>();
+   LinkedList
+ }
+ 
+ public void generateNonTerminals(){
+  Set<String> keys = grammar.keySet();
+  Nonterminals.addAll(keys);
+ }
+  
  PredictionMaker(String fileName){
   String deriveSymbol="->";
   String lhsDelimiters = " ";
