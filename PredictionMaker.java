@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
 
- PredictionMaker(String fileName, String deriveSymbol, String lhsDelimiters){
+ PredictionMaker(String fileName, String deriveSymbol, String orSymbol, String lhsDelimiters){
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
   File file = new File(fileName);
   Scanner sc =null;
@@ -28,19 +28,24 @@ public class PredictionMaker{
    String lineArr[] = line.split(deriveSymbol);
    String head = lineArr[0];
    String tempRhs = lineArr[lineArr.length-1].trim();
-   System.out.println(head);
-   String orTermsArr[] = tempRhs.split("|");
-   LinkedList<String> orTerms = new LinkedList<String>(Arrays.asList(orTermsArr) );
+   String orTermsArr[] = tempRhs.split(orSymbol);
+   LinkedList< LinkedList<String> > listOfLists = new LinkedList< LinkedList<String> >(); 
+   for(String branches : orTermsArr){
+     String[] leaves = (branches.trim()).split(lhsDelimiters);
+     LinkedList<String> production = new LinkedList<String>(Arrays.asList(leaves) );
+     listOfLists.add(production);
+   }
    
-   LinkedList<String> rhs = new LinkedList<String>(Arrays.asList(tail) );
-   grammar.put(head, rhs);
+   grammar.put(head, listOfLists);
+   
+
   }
  }
 
-
+/*
  public String toString(){
   StringBuilder build = new StringBuilder();
-  Set<String> keys = grammar.keySet();
+  Set<String> keys = grammar.keySet();"|"
   Iterator<String> it = keys.iterator();
   while(it.hasNext() ){
    String name = it.next();
@@ -55,6 +60,6 @@ public class PredictionMaker{
    build.append("]\n");
   }
   return build.toString();
- }
+ }*/
 
 }
