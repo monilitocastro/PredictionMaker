@@ -10,8 +10,68 @@ import java.io.FileNotFoundException;
 
 public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
+ private Hashtable<String, Set<String> > firstSet;
  private Set<String> Nonterminals;
  
+ public void firstOf(String X){
+   if(!Nonterminals.contains(X) ){
+     if(firstSet.contains(X) ){
+       return;
+     }else{
+       Set<String> term = new HashSet<String>();
+       term.add(X);
+       firstSet.put(X, term);
+     }
+   }else{
+     if(firstSet.contains(X) ){
+       return;
+     }else{
+       Set<String> term = new HashSet<String>();
+       LinkedList<LinkedList<String> > disjunction = grammar.get(X)
+       firstOf(disjunction);
+       LinkedList<String> listOfFirstSymbols = helperFirstOf(disjunction);
+       Iterator<String> it = listOfFirstSymbols.iterator();
+       while(it.hasNext() ){
+         String firstOfConjunction = it.next();
+         term.add(firstSet.get(firstOfConjunction) );
+       }
+       firstSet.put(X, term);
+     }
+   }
+ }
+ 
+ public boolean allHaveEmpty(LinkedList<String> conjunction){
+   Iterator<String> it = conjunction.iterator();
+   boolean result= false;
+   while(it.hasNext() ){
+     result = result & (firstSet.get(it.next() ) ).contains("<empty>");
+     if(!result) break;
+   }
+   return result;
+ }
+ public void firstOf(LinkedList<LinkedList<String> > disjunction){
+   Iterator<String> it = (helperFirstOf(disjunction)).iterator();
+   while(it.hasNext() ){
+     firstOf(it.next() );
+   }
+ }
+ 
+ public LinkedList<String> helperFirstOf(LinkedList<LinkedList<String> > disjunction){
+   Iterator<LinkedList<String> > it = disjunction.iterator();
+   LinkedList<String> result = new LinkedList<String>();
+   while(it.hasNext() ){
+     LinkedList<String> conjunction = it.next();
+     result.add(conjunction.get(0) );
+   }
+   return result;
+ }
+ 
+ public void firstOf(LinkedList<String> conjunction)){
+   boolean hasEmpty = allHaveEmpty(conjunction);
+   
+ }
+ 
+ /*
  public Set<String> firstOf(String X){
    Set<String> result = new HashSet<String>();
    if(Nonterminals.contains(X)){
@@ -50,7 +110,7 @@ public class PredictionMaker{
      result.add(firstOf(it.next(), ) );
    }
    return result
- }
+ }*/
  
  public void generateNonTerminals(){
   Set<String> keys = grammar.keySet();
@@ -62,6 +122,7 @@ public class PredictionMaker{
   String deriveSymbol="->";
   String lhsDelimiters = " ";
   String orSymbol = " \\| ";
+  firstSet = new Hashtable<String, Set<String> >();
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
   File file = new File(fileName);
   Scanner sc = null;
