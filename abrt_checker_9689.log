@@ -1,0 +1,4 @@
+Uncaught java.lang.ArrayIndexOutOfBoundsException exception in thread "main" in a method PredictionMaker.<init>() with signature (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 1
+	at PredictionMaker.<init>(PredictionMaker.java:32) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/PredictionMaker.class]
+	at test.main(test.java:4) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/test.class]

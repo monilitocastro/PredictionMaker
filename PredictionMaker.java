@@ -11,10 +11,13 @@ import java.io.FileNotFoundException;
 public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
 
- PredictionMaker(String fileName, String deriveSymbol, String orSymbol, String lhsDelimiters){
+ PredictionMaker(String fileName){
+  String deriveSymbol="->";
+  String lhsDelimiters = " ";
+  String orSymbol = " \\| ";
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
   File file = new File(fileName);
-  Scanner sc =null;
+  Scanner sc = null;
   try{
    sc = new Scanner(file);
   }catch(FileNotFoundException e){
@@ -29,37 +32,42 @@ public class PredictionMaker{
    String head = lineArr[0];
    String tempRhs = lineArr[lineArr.length-1].trim();
    String orTermsArr[] = tempRhs.split(orSymbol);
+   LinkedList< String > orTerms = new LinkedList<String>(Arrays.asList(orTermsArr) );
    LinkedList< LinkedList<String> > listOfLists = new LinkedList< LinkedList<String> >(); 
-   for(String branches : orTermsArr){
-     String[] leaves = (branches.trim()).split(lhsDelimiters);
+   Iterator<String> it = orTerms.iterator();
+   while(it.hasNext() ){
+     String temp = it.next();
+     String[] leaves = (temp.trim()).split(lhsDelimiters);
      LinkedList<String> production = new LinkedList<String>(Arrays.asList(leaves) );
      listOfLists.add(production);
    }
-   
    grammar.put(head, listOfLists);
-   
-
   }
  }
 
-/*
+
  public String toString(){
   StringBuilder build = new StringBuilder();
-  Set<String> keys = grammar.keySet();"|"
+  Set<String> keys = grammar.keySet();
   Iterator<String> it = keys.iterator();
   while(it.hasNext() ){
    String name = it.next();
-   LinkedList<String> rhs = grammar.get(name);
+   LinkedList<LinkedList<String > > rhs = grammar.get(name);
    build.append(name+" : ");
-   Iterator<String> it2 = rhs.iterator();
+   Iterator< LinkedList<String> > it2 = rhs.iterator();
    build.append("[ ");
    while(it2.hasNext() ){
-    String elem = it2.next();
-    build.append( elem + " ");
+    LinkedList<String> leaves = it2.next();
+    Iterator<String> it3 = leaves.iterator();
+    while(it3.hasNext() ){
+      build.append( " " + it3.next() + " ");
+    }
+    
+    if(it2.hasNext())build.append(" | ");
    }
    build.append("]\n");
   }
   return build.toString();
- }*/
+ }
 
 }
