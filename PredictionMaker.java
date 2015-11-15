@@ -19,7 +19,14 @@ public class PredictionMaker{
  
  
  private void ruleOneFirstSet(){
-   
+   Set<String> keys = grammar.keySet();
+   Iterator<String> it = keys.iterator();
+   while(it.hasNext() ){
+     String terminal = it.next();
+     Set<String> termFirstSet = new HashSet<String>();
+     termFirstSet.add(terminal );
+     firstSet.put(terminal, termFirstSet);
+   }
  }
  
  private void generateNonterminals(){
@@ -27,6 +34,10 @@ public class PredictionMaker{
   //if(keys==null){System.out.println("NULLKEYS");System.exit(0);}
   keys.remove("<empty>");//treat <empty> (aka epsilon) as a terminal
   nonterminals.addAll(keys);
+  Iterator<String> deletethis = keys.iterator();
+  while(deletethis.hasNext() ){
+    System.out.println("deletethis: '"+ deletethis.next() +"'" );
+  }
  }
   
  PredictionMaker(String fileName){
@@ -49,7 +60,7 @@ public class PredictionMaker{
   while(sc.hasNextLine() ){
    String line = sc.nextLine();
    String lineArr[] = line.split(deriveSymbol);
-   String head = lineArr[0];
+   String head = lineArr[0].trim();
    String tempRhs = lineArr[lineArr.length-1].trim();
    String orTermsArr[] = tempRhs.split(orSymbol);
    LinkedList< String > orTerms = new LinkedList<String>(Arrays.asList(orTermsArr) );
@@ -90,6 +101,20 @@ public class PredictionMaker{
    }
    build.append("]\n");
   }
+  build.append("\nFirst sets\n--------\n");
+  keys = firstSet.keySet();
+  it = keys.iterator();
+  while(it.hasNext() ){
+    String key = it.next();
+    build.append(key + " : ");
+    Set<String> firstsFor = firstSet.get(key);
+    Iterator<String> itFirst = firstsFor.iterator();
+    while(itFirst.hasNext() ){
+      build.append(" " + itFirst + " ");
+    }
+    build.append("\n");
+  }
+  
   return build.toString();
  }
 
