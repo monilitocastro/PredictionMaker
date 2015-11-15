@@ -1,0 +1,4 @@
+Uncaught java.lang.NullPointerException exception in thread "main" in a method PredictionMaker.<init>() with signature (Ljava/lang/String;)V
+Exception in thread "main" java.lang.NullPointerException
+	at PredictionMaker.<init>(PredictionMaker.java:87) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/PredictionMaker.class]
+	at test.main(test.java:8) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/test.class]

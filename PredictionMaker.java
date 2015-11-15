@@ -36,10 +36,77 @@ public class PredictionMaker{
      String term = it.next();
      Set<String> createFirstSet = new HashSet<String>();
      createFirstSet.add(term);
+     //System.out.println("TERMINAL: "+term);
      if(!term.equals(""))firstSet.put( term, createFirstSet);
    }
  }
  
+ private void findFirstTerminals(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       if(itS2.hasNext() ){
+         String term = itS2.next();
+         if(terminals.contains(term)){
+           if(firstSet.contains(key)){
+             Set<String> first = firstSet.get(key);
+             first.add(term);
+           }else{
+             Set<String> first = new HashSet<String>();
+             first.add(term);
+             firstSet.put(key, first);
+           }
+         }
+       }
+     }
+   }
+ }
+ 
+ /*
+ private void findFirstTerminals(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> it = keys.iterator();
+   while(it.hasNext() ){
+     String key = it.next();
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String>> it2 = disjunction.iterator();
+     while(it2.hasNext()){
+       Iterator<String> it3 = (it2.next()).iterator();
+       if(it3.hasNext() ){
+           String lookFor = it3.next();
+           if(terminals.contains(lookFor)){
+            Set<String> first = firstSet.get(key);
+            //first.add(lookFor);
+            System.out.println("1st lookFor: " +lookFor +" key: "+key);
+           }else{
+            Set<String> first = new HashSet<String>();
+            first.add(lookFor);
+            firstSet.put(key, first);
+            System.out.println("2nd lookFor: " +lookFor +" key: "+key);    
+           }
+       }
+     }
+   }
+ }*/
+ /*
+  *        String lookFor = it3.next();
+           if(terminals.contains(lookFor)){
+            Set<String> first = firstSet.get(key);
+            first.add(lookFor);
+            System.out.println("1st lookFor: " +lookFor +" key: "+key);
+           }else{
+            Set<String> first = new HashSet<String>();
+            first.add(lookFor);
+            firstSet.put(key, first);
+            System.out.println("2nd lookFor: " +lookFor +" key: "+key);    
+           }
+  * */
  private void generateNonterminals(){
   Set<String> keys = grammar.keySet();
   //if(keys==null){System.out.println("NULLKEYS");System.exit(0);}
@@ -52,6 +119,7 @@ public class PredictionMaker{
   String lhsDelimiters = " ";
   String orSymbol = " \\| ";
   tokens=new HashSet<String>();
+  terminals = new HashSet<String>();
   nonterminals = new HashSet<String>();
   firstSet = new Hashtable<String, Set<String> >();
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
@@ -81,8 +149,8 @@ public class PredictionMaker{
      LinkedList<String> production = new LinkedList<String>(Arrays.asList(leaves) );
      Iterator<String> it2 = production.iterator();
      while(it2.hasNext() ){
-       String lookForEmpty = it2.next();
-       if(lookForEmpty.equals("<empty>")){
+       String lookFor = it2.next();
+       if(lookFor.equals("<empty>")){
          ruleTwoFirstSet(head);
        }
      }
@@ -97,7 +165,7 @@ public class PredictionMaker{
   
   generateNonterminals();
   ruleOneFirstSet();
-  
+  findFirstTerminals();
  }
 
 
