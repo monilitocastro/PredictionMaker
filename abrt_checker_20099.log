@@ -1,0 +1,9 @@
+Uncaught java.lang.OutOfMemoryError exception in thread "main" in a method java.util.Arrays.copyOf() with signature ([CI)[C
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at java.util.Arrays.copyOf(Arrays.java:2367) [jar:file:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.79-2.5.5.0.fc20.i386/jre/lib/rt.jar!/java/util/Arrays.class]
+	at java.lang.AbstractStringBuilder.expandCapacity(AbstractStringBuilder.java:130) [jar:file:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.79-2.5.5.0.fc20.i386/jre/lib/rt.jar!/java/lang/AbstractStringBuilder.class]
+	at java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:114) [jar:file:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.79-2.5.5.0.fc20.i386/jre/lib/rt.jar!/java/lang/AbstractStringBuilder.class]
+	at java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:415) [jar:file:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.79-2.5.5.0.fc20.i386/jre/lib/rt.jar!/java/lang/AbstractStringBuilder.class]
+	at java.lang.StringBuilder.append(StringBuilder.java:132) [jar:file:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.79-2.5.5.0.fc20.i386/jre/lib/rt.jar!/java/lang/StringBuilder.class]
+	at PredictionMaker.toString(PredictionMaker.java:114) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/PredictionMaker.class]
+	at test.main(test.java:5) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/test.class]

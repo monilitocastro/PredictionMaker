@@ -15,17 +15,18 @@ public class PredictionMaker{
  private Hashtable<String, Set<String> > firstSet;
  private Set<String> nonterminals;
  private Stack<String> stack;
-
- 
+ private Set<String> tokens;
+ private Set<String> terminals;
  
  private void ruleOneFirstSet(){
-   Set<String> keys = grammar.keySet();
-   Iterator<String> it = keys.iterator();
+   terminals = new HashSet<String>(tokens);
+   terminals.removeAll(nonterminals);
+   Iterator<String> it = terminals.iterator();
    while(it.hasNext() ){
-     String terminal = it.next();
-     Set<String> termFirstSet = new HashSet<String>();
-     termFirstSet.add(terminal );
-     firstSet.put(terminal, termFirstSet);
+     String term = it.next();
+     Set<String> createFirstSet = new HashSet<String>();
+     createFirstSet.add(term);
+     if(!term.equals(""))firstSet.put( term, createFirstSet);
    }
  }
  
@@ -44,6 +45,7 @@ public class PredictionMaker{
   String deriveSymbol="->";
   String lhsDelimiters = " ";
   String orSymbol = " \\| ";
+  tokens=new HashSet<String>();
   nonterminals = new HashSet<String>();
   firstSet = new Hashtable<String, Set<String> >();
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
@@ -68,14 +70,20 @@ public class PredictionMaker{
    Iterator<String> it = orTerms.iterator();
    while(it.hasNext() ){
      String temp = it.next();
-     String[] leaves = (temp.trim()).split(lhsDelimiters);
+     temp = temp.trim();
+     String[] leaves = temp.split(lhsDelimiters);
      LinkedList<String> production = new LinkedList<String>(Arrays.asList(leaves) );
+     tokens.addAll(production);
      listOfLists.add(production);
    }
-   if(!head.equals("") )grammar.put(head, listOfLists);
+   if(!head.equals("") ){
+     grammar.put(head, listOfLists);
+     tokens.add(head);
+   }
   }
   
   generateNonterminals();
+  ruleOneFirstSet();
   
  }
 
@@ -104,13 +112,15 @@ public class PredictionMaker{
   build.append("\nFirst sets\n--------\n");
   keys = firstSet.keySet();
   it = keys.iterator();
+  System.out.println("DELETE THIS. middle of toString.");
   while(it.hasNext() ){
     String key = it.next();
     build.append(key + " : ");
     Set<String> firstsFor = firstSet.get(key);
     Iterator<String> itFirst = firstsFor.iterator();
+    System.out.println("DELETE THIS. before itFirst.");
     while(itFirst.hasNext() ){
-      build.append(" " + itFirst + " ");
+      build.append(" " + itFirst.next() + " ");
     }
     build.append("\n");
   }
