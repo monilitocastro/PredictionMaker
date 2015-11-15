@@ -1,5 +1,0 @@
-Uncaught java.util.NoSuchElementException exception in thread "main" in a method java.util.LinkedList$ListItr.next() with signature ()Ljava/lang/Object;
-Exception in thread "main" java.util.NoSuchElementException
-	at java.util.LinkedList$ListItr.next(LinkedList.java:888) [jar:file:/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.79-2.5.5.0.fc20.i386/jre/lib/rt.jar!/java/util/LinkedList$ListItr.class]
-	at PredictionMaker.toString(PredictionMaker.java:63) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/PredictionMaker.class]
-	at test.main(test.java:5) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/test.class]

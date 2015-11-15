@@ -1,5 +1,0 @@
-Uncaught java.lang.NullPointerException exception in thread "main" in a method PredictionMaker.generateNonterminals() with signature ()V
-Exception in thread "main" java.lang.NullPointerException
-	at PredictionMaker.generateNonterminals(PredictionMaker.java:25) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/PredictionMaker.class]
-	at PredictionMaker.<init>(PredictionMaker.java:62) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/PredictionMaker.class]
-	at test.main(test.java:4) [file:/run/media/liveuser/A6AC4323AC42ECFD/Users/MCastro/PredictionMaker/test.class]
