@@ -18,6 +18,15 @@ public class PredictionMaker{
  private Set<String> tokens;
  private Set<String> terminals;
  
+ private void ruleTwoFirstSet(String name){
+   if(firstSet.contains(name) && firstSet.get(name)!=null){
+     (firstSet.get(name)).add(name);
+   }else{
+     Set<String> emptyset = new HashSet<String>();
+     emptyset.add(new String("<empty>") );
+   }
+ }
+ 
  private void ruleOneFirstSet(){
    terminals = new HashSet<String>(tokens);
    terminals.removeAll(nonterminals);
@@ -71,6 +80,7 @@ public class PredictionMaker{
    while(it.hasNext() ){
      String temp = it.next();
      temp = temp.trim();
+     //if(temp.equals("<empty>"))ruleTwoFirstSet(head);
      String[] leaves = temp.split(lhsDelimiters);
      LinkedList<String> production = new LinkedList<String>(Arrays.asList(leaves) );
      tokens.addAll(production);
