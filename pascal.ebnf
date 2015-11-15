@@ -91,5 +91,3 @@
 <constant> -> <NUMBER> | <LITCHAR> | <ID>
 
 <integer_constant> -> <NUMBER>
-
-<empty> -> 

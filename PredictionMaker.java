@@ -24,6 +24,7 @@ public class PredictionMaker{
    }else{
      Set<String> emptyset = new HashSet<String>();
      emptyset.add(new String("<empty>") );
+     firstSet.put(name, emptyset);
    }
  }
  
@@ -44,10 +45,6 @@ public class PredictionMaker{
   //if(keys==null){System.out.println("NULLKEYS");System.exit(0);}
   keys.remove("<empty>");//treat <empty> (aka epsilon) as a terminal
   nonterminals.addAll(keys);
-  Iterator<String> deletethis = keys.iterator();
-  while(deletethis.hasNext() ){
-    System.out.println("deletethis: '"+ deletethis.next() +"'" );
-  }
  }
   
  PredictionMaker(String fileName){
@@ -80,9 +77,15 @@ public class PredictionMaker{
    while(it.hasNext() ){
      String temp = it.next();
      temp = temp.trim();
-     //if(temp.equals("<empty>"))ruleTwoFirstSet(head);
      String[] leaves = temp.split(lhsDelimiters);
      LinkedList<String> production = new LinkedList<String>(Arrays.asList(leaves) );
+     Iterator<String> it2 = production.iterator();
+     while(it2.hasNext() ){
+       String lookForEmpty = it2.next();
+       if(lookForEmpty.equals("<empty>")){
+         ruleTwoFirstSet(head);
+       }
+     }
      tokens.addAll(production);
      listOfLists.add(production);
    }
@@ -122,13 +125,11 @@ public class PredictionMaker{
   build.append("\nFirst sets\n--------\n");
   keys = firstSet.keySet();
   it = keys.iterator();
-  System.out.println("DELETE THIS. middle of toString.");
   while(it.hasNext() ){
     String key = it.next();
     build.append(key + " : ");
     Set<String> firstsFor = firstSet.get(key);
     Iterator<String> itFirst = firstsFor.iterator();
-    System.out.println("DELETE THIS. before itFirst.");
     while(itFirst.hasNext() ){
       build.append(" " + itFirst.next() + " ");
     }

@@ -1,7 +1,11 @@
 public class test{
 
  public static void main (String args[]){
-  PredictionMaker predict = new PredictionMaker("pascal.ebnf");
+   if(args[0]==null){
+     System.out.println("Please specify a filename (e.g. java test pascal2.ebnf");
+     System.exit(0);
+   }
+  PredictionMaker predict = new PredictionMaker(args[0]);
   System.out.println(predict.toString() );
  }
 }
