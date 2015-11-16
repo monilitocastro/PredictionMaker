@@ -40,6 +40,85 @@ public class PredictionMaker{
    }
  }
  
+ private void generateConjunctionFirsts(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       while(itS2.hasNext() ){
+         String term = itS2.next();
+          if(firstSet.containsKey(key) ){
+            Set<String> first = firstSet.get(key);
+            System.out.println("TERM: "+term);
+            Set<String> firstTemp;
+            if(firstSet.get(term)!=null){
+              firstTemp = new HashSet<String>( firstSet.get(term) );
+            }else{
+              break;
+            }
+            firstTemp.remove("<empty>");
+            first.addAll(firstTemp);
+            if(!first.contains("<empty>")){
+              break;
+            }
+          }
+          
+       }
+     }
+   }
+ }
+ 
+ private void findFirstNonterminalsInitiate(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     findFirstNonterminals(key);
+   }
+ }
+ 
+  private void findFirstNonterminals(String key){
+    System.out.println("Descending into key "+key);
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       if(itS2.hasNext() ){
+         String term = itS2.next();
+         boolean b = terminals.contains(term);
+         System.out.println("term is  "+term);
+         if(terminals.contains(term)){
+           System.out.println("First of "+ key + " is " + term);
+           if(firstSet.containsKey(key)){
+             firstSet.get(key).add(term);
+           }else{
+             System.out.println("Does not contain key "+key+ " for term "+term);
+             Set<String> s = new HashSet<String>();
+             s.add(term);
+             firstSet.put(key, s);
+           }
+           //Set<String> s = new HashSet<String>();
+           //s.add(term);
+           //firstSet.put(key, s);
+         }else{
+           findFirstNonterminals(term);
+           //Set<String> s = firstSet.get(key);
+           //Set<String> s2 = firstSet.get(term);
+           //if(s==null)s = new HashSet<String>();
+           //if(s2==null)s2 = new HashSet<String>();
+           //s.addAll(s2);
+         }
+       }
+    }
+   
+ }
+ 
  private void findFirstTerminals(){
    Set<String> keys = grammar.keySet();
    Iterator<String> itS = keys.iterator();
@@ -53,7 +132,7 @@ public class PredictionMaker{
        if(itS2.hasNext() ){
          String term = itS2.next();
          if(terminals.contains(term)){
-           System.out.println("key '"+key+"' is in: "+firstSet.contains(key));
+           //System.out.println("key '"+key+"' is in: "+firstSet.contains(key));
            if(firstSet.containsKey(key) ){
              Set<String> first = firstSet.get(key);
              first.add(term);
@@ -122,6 +201,8 @@ public class PredictionMaker{
   generateNonterminals();
   ruleOneFirstSet();
   findFirstTerminals();
+  findFirstNonterminalsInitiate();
+  //generateConjunctionFirsts();
  }
 
 
