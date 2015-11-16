@@ -73,6 +73,50 @@ public class PredictionMaker{
    }
  }
  
+ private void ruleFourInitiate(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     ruleFourDescend(key);
+   }
+ }
+ 
+  private void ruleFourDescend(String key){
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       if(itS2.hasNext() ){
+         String term = itS2.next();
+         boolean b = terminals.contains(term);
+         if(terminals.contains(term)){
+           if(firstSet.containsKey(key)){
+             firstSet.get(key).add(term);
+           }else{
+             Set<String> s = new HashSet<String>();
+             s.add(term);
+             firstSet.put(key, s);
+           }
+         }else{
+           ruleFourDescend(term);
+           //System.out.println("View of: " + key+ ". firstSet has "+term + " is "+ firstSet.containsKey(term) );
+           Set<String> s;
+           if(!firstSet.containsKey(key) ){
+             s = new HashSet<String>();
+           }else{
+             s = firstSet.get(key);
+           }
+           Set<String> setCopy = firstSet.get(term);
+           setCopy.remove("<empty>");
+           s.addAll(setCopy );
+           firstSet.put(key, s);
+         }
+       }
+    }
+ }
+  
  private void findFirstNonterminalsInitiate(){
    Set<String> keys = grammar.keySet();
    Iterator<String> itS = keys.iterator();
@@ -83,7 +127,6 @@ public class PredictionMaker{
  }
  
   private void findFirstNonterminals(String key){
-    //System.out.println("Descending into key "+key);
      LinkedList< LinkedList<String > > disjunction = grammar.get(key);
      Iterator<LinkedList<String > > itLS = disjunction.iterator();
      while(itLS.hasNext() ){
@@ -92,37 +135,27 @@ public class PredictionMaker{
        if(itS2.hasNext() ){
          String term = itS2.next();
          boolean b = terminals.contains(term);
-         //System.out.println("term is  "+term);
          if(terminals.contains(term)){
-           //System.out.println("First of "+ key + " is " + term);
            if(firstSet.containsKey(key)){
              firstSet.get(key).add(term);
            }else{
-             //System.out.println("Does not contain key "+key+ " for term "+term);
              Set<String> s = new HashSet<String>();
              s.add(term);
              firstSet.put(key, s);
            }
-           //Set<String> s = new HashSet<String>();
-           //s.add(term);
-           //firstSet.put(key, s);
          }else{
            findFirstNonterminals(term);
-           System.out.println("View of: " + key+ ". firstSet has "+term + " is "+ firstSet.containsKey(term) );
+           //System.out.println("View of: " + key+ ". firstSet has "+term + " is "+ firstSet.containsKey(term) );
            Set<String> s;
            if(!firstSet.containsKey(key) ){
              s = new HashSet<String>();
            }else{
              s = firstSet.get(key);
            }
-           s.addAll(firstSet.get(term) );
+           Set<String> setCopy = firstSet.get(term);
+           setCopy.remove("<empty>");
+           s.addAll(setCopy );
            firstSet.put(key, s);
-           
-//Set<String> s = firstSet.get(key);
-           //Set<String> s2 = firstSet.get(term);
-           //if(s==null)s = new HashSet<String>();
-           //if(s2==null)s2 = new HashSet<String>();
-           //s.addAll(s2);
          }
        }
     }

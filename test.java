@@ -6,6 +6,6 @@ public class test{
      System.exit(0);
    }
   PredictionMaker predict = new PredictionMaker(args[0]);
-  System.out.println(predict.toString() );
+  System.out.println("\n\n"+predict.toString() );
  }
 }
