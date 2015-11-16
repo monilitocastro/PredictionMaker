@@ -132,14 +132,14 @@ public class PredictionMaker{
      while(itLS.hasNext() ){
        LinkedList<String> conjunction = itLS.next();
        Boolean hasAllEmpty = new Boolean(false);
-       Set<String> collection = contiguousConjunctionsWithEmpty(conjunction, hasAllEmpty );
+       Set<String> collection = contiguousConjunctionsWithEmpty(conjunction, hasAllEmpty, itS );
        System.out.println("key "+key);
        firstSet.get(key).addAll(collection);
      }
    }  
  }
  
- private Set<String> contiguousConjunctionsWithEmpty(LinkedList<String> conjunction, Boolean hasAllEmpty){
+ private Set<String> contiguousConjunctionsWithEmpty(LinkedList<String> conjunction, Boolean hasAllEmpty,Iterator<String> itS){
    //LinkedList<String> conjunction = itLS.next();
    Iterator<String> itS2 = conjunction.iterator();
    Set<String> result = new HashSet<String>();
@@ -148,11 +148,13 @@ public class PredictionMaker{
      if(firstSet.get(term).contains("<empty>") ){
        result.addAll(firstSet.get(term) );
        System.out.println("term " + term+ " firstSet.toString() " + firstSet.get(term).toString() );
-       result.remove("<empty>");
+       if(itS.hasNext() )result.remove("<empty>");
      }else{
-       if(firstSet.get(term).contains("<empty>") ){
-         result.remove("<empty>");
+       if( firstSet.get(term).contains("<empty>") ){
+         System.out.println("1 edge term: "+term);
+         //result.remove("<empty>");
        }
+       System.out.println("2 edge term: "+term + " b "+firstSet.get(term).contains("<empty>"));
        break;
      }
    }
@@ -215,9 +217,9 @@ public class PredictionMaker{
   findFirstTerminals();
   findFirstNonterminalsInitiate();
   cullEmptyNonterminals();
-  //for(int i = 0; i < 10; i++){
+  for(int i = 0; i < 10; i++){
     generateCascadingConjunctions();
-  //}
+  }
  }
 
 
