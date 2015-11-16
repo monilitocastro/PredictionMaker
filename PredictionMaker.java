@@ -40,82 +40,6 @@ public class PredictionMaker{
    }
  }
  
- private void generateConjunctionFirsts(){
-   Set<String> keys = grammar.keySet();
-   Iterator<String> itS = keys.iterator();
-   while(itS.hasNext()){
-     String key = itS.next();
-     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
-     Iterator<LinkedList<String > > itLS = disjunction.iterator();
-     while(itLS.hasNext() ){
-       LinkedList<String> conjunction = itLS.next();
-       Iterator<String> itS2 = conjunction.iterator();
-       while(itS2.hasNext() ){
-         String term = itS2.next();
-          if(firstSet.containsKey(key) ){
-            Set<String> first = firstSet.get(key);
-            System.out.println("TERM: "+term);
-            Set<String> firstTemp;
-            if(firstSet.get(term)!=null){
-              firstTemp = new HashSet<String>( firstSet.get(term) );
-            }else{
-              break;
-            }
-            firstTemp.remove("<empty>");
-            first.addAll(firstTemp);
-            if(!first.contains("<empty>")){
-              break;
-            }
-          }
-          
-       }
-     }
-   }
- }
- 
- private void ruleFourInitiate(){
-   Set<String> keys = grammar.keySet();
-   Iterator<String> itS = keys.iterator();
-   while(itS.hasNext()){
-     String key = itS.next();
-     ruleFourDescend(key);
-   }
- }
- 
-  private void ruleFourDescend(String key){
-     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
-     Iterator<LinkedList<String > > itLS = disjunction.iterator();
-     while(itLS.hasNext() ){
-       LinkedList<String> conjunction = itLS.next();
-       Iterator<String> itS2 = conjunction.iterator();
-       if(itS2.hasNext() ){
-         String term = itS2.next();
-         boolean b = terminals.contains(term);
-         if(terminals.contains(term)){
-           if(firstSet.containsKey(key)){
-             firstSet.get(key).add(term);
-           }else{
-             Set<String> s = new HashSet<String>();
-             s.add(term);
-             firstSet.put(key, s);
-           }
-         }else{
-           ruleFourDescend(term);
-           //System.out.println("View of: " + key+ ". firstSet has "+term + " is "+ firstSet.containsKey(term) );
-           Set<String> s;
-           if(!firstSet.containsKey(key) ){
-             s = new HashSet<String>();
-           }else{
-             s = firstSet.get(key);
-           }
-           Set<String> setCopy = firstSet.get(term);
-           setCopy.remove("<empty>");
-           s.addAll(setCopy );
-           firstSet.put(key, s);
-         }
-       }
-    }
- }
   
  private void findFirstNonterminalsInitiate(){
    Set<String> keys = grammar.keySet();
@@ -134,7 +58,6 @@ public class PredictionMaker{
        Iterator<String> itS2 = conjunction.iterator();
        if(itS2.hasNext() ){
          String term = itS2.next();
-         boolean b = terminals.contains(term);
          if(terminals.contains(term)){
            if(firstSet.containsKey(key)){
              firstSet.get(key).add(term);
@@ -145,7 +68,6 @@ public class PredictionMaker{
            }
          }else{
            findFirstNonterminals(term);
-           //System.out.println("View of: " + key+ ". firstSet has "+term + " is "+ firstSet.containsKey(term) );
            Set<String> s;
            if(!firstSet.containsKey(key) ){
              s = new HashSet<String>();
@@ -159,7 +81,6 @@ public class PredictionMaker{
          }
        }
     }
-   
  }
  
  private void findFirstTerminals(){
@@ -188,6 +109,29 @@ public class PredictionMaker{
        }
      }
    }
+ }
+ 
+ private void generateCascadingConjunctions(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       while(itS2.hasNext() ){
+         String term = itS2.next();
+         if(!firstSet.get(term).contains("<empty>")){
+           System.out.println("term "+ term + " does not contain <empty> toString "+firstSet.get(term).toString());
+           break;
+         }else{
+           System.out.println("keep going with term " +term);
+         }
+       }
+     }
+   }  
  }
 
  private void generateNonterminals(){
@@ -245,7 +189,7 @@ public class PredictionMaker{
   ruleOneFirstSet();
   findFirstTerminals();
   findFirstNonterminalsInitiate();
-  //generateConjunctionFirsts();
+  generateCascadingConjunctions();
  }
 
 
