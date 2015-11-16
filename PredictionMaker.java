@@ -18,16 +18,6 @@ public class PredictionMaker{
  private Set<String> tokens;
  private Set<String> terminals;
  
- private void ruleTwoFirstSet(String name){
-   if(firstSet.contains(name) && firstSet.get(name)!=null){
-     (firstSet.get(name)).add(name);
-   }else{
-     Set<String> emptyset = new HashSet<String>();
-     emptyset.add(new String("<empty>") );
-     firstSet.put(name, emptyset);
-   }
- }
- 
  private void ruleOneFirstSet(){
    terminals = new HashSet<String>(tokens);
    terminals.removeAll(nonterminals);
@@ -46,10 +36,7 @@ public class PredictionMaker{
    Iterator<String> itS = keys.iterator();
    while(itS.hasNext()){
      String key = itS.next();
-     System.out.println("Descending with key "+key);
      findFirstNonterminals(key);
-     System.out.println("Ascended with key "+key);
-     System.out.println("3. firstSet: "+ firstSet.get("<h>").toString() );
    }
  }
  private void cullEmptyNonterminals(){
@@ -80,43 +67,30 @@ public class PredictionMaker{
      LinkedList< LinkedList<String > > disjunction = grammar.get(key);
      Iterator<LinkedList<String > > itLS = disjunction.iterator();
      while(itLS.hasNext() ){
-       //System.out.println("key "+key + " in itLS while loop");
        LinkedList<String> conjunction = itLS.next();
        Iterator<String> itS2 = conjunction.iterator();
        if(itS2.hasNext() ){
-         //System.out.println("key "+key + " in itS2.hasNext if statement");
          String term = itS2.next();
          if(terminals.contains(term)){
-           //System.out.println("key "+key+" in terminals.contains with term "+ term);
            if(firstSet.containsKey(key)){
-             //System.out.println("key "+key + " in ifstment firstSet.containsKey");
              firstSet.get(key).add(term);
-             //System.out.println("6. <h> firstSet: "+ firstSet.get("<h>").toString() );
            }else{
-             //System.out.println("key "+key +" else of ifstmt firstSet.containsKey");
              Set<String> s = new HashSet<String>();
              s.add(term);
              firstSet.put(key, s);
            }
-             if(key.equals("<h>"))System.out.println("<h> firstSet: "+ firstSet.get(key).toString() );
          }else{
-           //System.out.println("key "+key+" else of term contains key if stmt");
            findFirstNonterminals(term);
            Set<String> s;
            if(!firstSet.containsKey(key) ){
              s = new HashSet<String>();
-             //System.out.println("key "+key+ " firstSet does not contain key");
            }else{
-             //System.out.println("key "+key+ " else firstSet does not contain key");
              s = firstSet.get(key);
-             //System.out.println("2. firstSet: "+ firstSet.get(term).toString() + " term " +term);
            }
            Set<String> setCopy = firstSet.get(term);
-           //setCopy.remove("<empty>");
            s.addAll(setCopy );
            firstSet.put(key, s);
          }
-         //System.out.println("4. <h> firstSet: "+ firstSet.get("<h>").toString() );
        }
     }
  }
@@ -134,7 +108,6 @@ public class PredictionMaker{
        if(itS2.hasNext() ){
          String term = itS2.next();
          if(terminals.contains(term)){
-           //System.out.println("key '"+key+"' is in: "+firstSet.contains(key));
            if(firstSet.containsKey(key) ){
              Set<String> first = firstSet.get(key);
              first.add(term);
@@ -158,18 +131,32 @@ public class PredictionMaker{
      Iterator<LinkedList<String > > itLS = disjunction.iterator();
      while(itLS.hasNext() ){
        LinkedList<String> conjunction = itLS.next();
-       Iterator<String> itS2 = conjunction.iterator();
-       while(itS2.hasNext() ){
-         String term = itS2.next();
-         if(!firstSet.get(term).contains("<empty>")){
-           System.out.println("term "+ term + " does not contain <empty> toString "+firstSet.get(term).toString());
-           break;
-         }else{
-           System.out.println("keep going with term " +term);
-         }
-       }
+       Boolean hasAllEmpty = new Boolean(false);
+       Set<String> collection = contiguousConjunctionsWithEmpty(conjunction, hasAllEmpty );
+       System.out.println("key "+key);
+       firstSet.get(key).addAll(collection);
      }
    }  
+ }
+ 
+ private Set<String> contiguousConjunctionsWithEmpty(LinkedList<String> conjunction, Boolean hasAllEmpty){
+   //LinkedList<String> conjunction = itLS.next();
+   Iterator<String> itS2 = conjunction.iterator();
+   Set<String> result = new HashSet<String>();
+   while(itS2.hasNext() ){
+     String term = itS2.next();
+     if(firstSet.get(term).contains("<empty>") ){
+       result.addAll(firstSet.get(term) );
+       System.out.println("term " + term+ " firstSet.toString() " + firstSet.get(term).toString() );
+       result.remove("<empty>");
+     }else{
+       if(firstSet.get(term).contains("<empty>") ){
+         result.remove("<empty>");
+       }
+       break;
+     }
+   }
+   return result;
  }
 
  private void generateNonterminals(){
@@ -228,7 +215,9 @@ public class PredictionMaker{
   findFirstTerminals();
   findFirstNonterminalsInitiate();
   cullEmptyNonterminals();
-  //generateCascadingConjunctions();
+  //for(int i = 0; i < 10; i++){
+    generateCascadingConjunctions();
+  //}
  }
 
 
