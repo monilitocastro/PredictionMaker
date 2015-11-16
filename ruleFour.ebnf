@@ -1,8 +1,8 @@
-<a> -> <b> | <c> <d> | <e>
+<a> -> <b> <c> <d> <e>
 <b> -> <B> | <empty>
 <c> -> <C> | <empty>
 <d> -> <D> | <empty>
 <e> -> <g> | <h> <i>
 <g> -> <G> | <empty>
 <h> -> <H> | <empty>
-<i> -> <I> | <empty>  
+<i> -> <I>
