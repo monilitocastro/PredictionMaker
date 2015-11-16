@@ -9,7 +9,7 @@ import java.util.Stack;
 import java.lang.StringBuilder;
 import java.io.File;
 import java.io.FileNotFoundException;
-//NOTHING NEW HERE
+
 public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
  private Hashtable<String, Set<String> > firstSet;
