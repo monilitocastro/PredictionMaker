@@ -76,12 +76,14 @@ public class PredictionMaker{
          System.out.println("key "+ key + " cascade token: "+token);
          if(hasEmpty.contains(token) ){
            loop = true;
-           Set<String> setCopy = firstSet.get(token);
-           //if(nonterminals.contains(key) )setCopy.remove("<empty>");
-           firstSet.get(key).addAll(setCopy );
+
          }else{
-           if(!itS2.hasNext() )System.out.println("Border key"+ key+ " token "+token);
+           if(!itLS.hasNext() )System.out.println("Border key"+ key+ " token "+token);
          }
+         Set<String> setCopy = new HashSet<String>(firstSet.get(token));
+         //setCopy.remove("<empty>");
+         firstSet.get(key).addAll(setCopy );
+         if(setCopy.contains("<empty>") )hasEmpty.add(key);
        }
     }
  }
@@ -157,48 +159,6 @@ public class PredictionMaker{
      }
    }
  }
- 
- private void generateCascadingConjunctions(){
-   Set<String> keys = grammar.keySet();
-   Iterator<String> itS = keys.iterator();
-   while(itS.hasNext()){
-     String key = itS.next();
-     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
-     Iterator<LinkedList<String > > itLS = disjunction.iterator();
-     while(itLS.hasNext() ){
-       LinkedList<String> conjunction = itLS.next();
-       Boolean hasAllEmpty = new Boolean(false);
-       Set<String> collection = contiguousConjunctionsWithEmpty(conjunction, hasAllEmpty, itS );
-       //System.out.println("key "+key + " hasAllEmpty "+hasAllEmpty );
-       firstSet.get(key).addAll(collection);
-     }
-   }  
- }
- 
- private Set<String> contiguousConjunctionsWithEmpty(LinkedList<String> conjunction, Boolean hasAllEmpty,Iterator<String> itS){
-   //LinkedList<String> conjunction = itLS.next();
-   Iterator<String> itS2 = conjunction.iterator();
-   Set<String> result = new HashSet<String>();
-   while(itS2.hasNext() ){
-     String term = itS2.next();
-     if(firstSet.get(term).contains("<empty>") ){
-       result.addAll(firstSet.get(term) );
-       System.out.println("term " + term+ " firstSet.toString() " + firstSet.get(term).toString() );
-       if(itS.hasNext() & !term.equals("<empty>") ){
-         System.out.println("Removing <empty> on term "+term);
-         result.remove("<empty>");
-       }
-     }else{
-       if( firstSet.get(term).contains("<empty>") ){
-         System.out.println("1 edge term: "+term);
-         //result.remove("<empty>");
-       }
-       System.out.println("2 edge term: "+term + " b "+firstSet.get(term).contains("<empty>"));
-       break;
-     }
-   }
-   return result;
- }
 
  private void generateNonterminals(){
   Set<String> keys = grammar.keySet();
@@ -269,7 +229,7 @@ public class PredictionMaker{
   cullEmptyNonterminals();
   generateHasEmpty();
   //cascadeInit();
-  for(int i = 0; i < 2; i++){
+  for(int i = 0; i < 4; i++){
     cascadeInit();
     //generateCascadingConjunctions();
   }
