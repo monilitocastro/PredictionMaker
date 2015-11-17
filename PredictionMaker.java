@@ -80,6 +80,8 @@ public class PredictionMaker{
          }
          Set<String> setCopy = new HashSet<String>(firstSet.get(token));
          //setCopy.remove("<empty>");
+         if(key.equals("<e>"))System.out.println("<e> setCopy = "+setCopy.toString() );
+         if(nonterminals.contains(key) & itS2.hasNext() ) setCopy.remove("<empty>") ;
          firstSet.get(key).addAll(setCopy );
          if(setCopy.contains("<empty>") )hasEmpty.add(key);
        }
@@ -183,9 +185,9 @@ public class PredictionMaker{
          String token = itS2.next();
          if(firstSet.get(token).contains("<empty>") ){
            loop = true;
-           //if(key.equals("<a>"))System.out.println("HELLLLO!4 token "+token);
+           if(key.equals("<a>"))System.out.println("HELLLLO!4 token "+token);
          }else{
-           //if(key.equals("<a>"))System.out.println("HELLLLO!3");
+           if(key.equals("<a>"))System.out.println("HELLLLO!3");
            //add token to key's entry for last token for later evaluation
            Set<String> entry;
            if(!trollSet.containsKey(key) ){
@@ -343,7 +345,9 @@ public class PredictionMaker{
   
   generateNonterminals();
   ruleOneFirstSet();
+  
   findFirstTerminals();
+  
   findFirstNonterminalsInitiate();
   cullEmptyNonterminals();
   generateHasEmpty();
