@@ -197,6 +197,16 @@ public class PredictionMaker{
              entry.add(token);
            }
          }
+         if(loop){
+           //trollSet.get(token).add("<empty>");
+           if(trollSet.containsKey(token) ){
+             trollSet.get(token).add("<empty>");
+           }else{
+             Set<String> empty = new HashSet<String>();
+             empty.add("<empty>");
+             trollSet.put(token, empty);
+           }
+         }
        }
     }
  }
@@ -218,7 +228,7 @@ public class PredictionMaker{
         if(nonterminals.contains(lookFor) ){
           replacementSet.addAll(firstSet.get(lookFor) );
           insert = true;
-          System.out.println("key "+ key+" replace "+ lookFor + " replacementSet "+replacementSet.toString() );
+          //System.out.println("key "+ key+" replace "+ lookFor + " replacementSet "+replacementSet.toString() );
           //items.remove(lookFor);
           //items.addAll(firstSet.get(lookFor) );
         }
@@ -233,9 +243,9 @@ public class PredictionMaker{
       }
       //exists = false;
     }
-    System.out.println("replacement Hash "+ replacementHash.toString() );
+    //System.out.println("replacement Hash "+ replacementHash.toString() );
     trollSet.putAll(replacementHash);
-    System.out.println("trollSet "+ trollSet.toString() );
+    //System.out.println("trollSet "+ trollSet.toString() );
   }
   
   private void trolling(){
@@ -252,6 +262,7 @@ public class PredictionMaker{
       Iterator<String> itemIt = items.iterator();
       while(itemIt.hasNext() ){
         String lookFor = itemIt.next();
+        System.out.println("key is " + key + " and lookFor "+lookFor);
         if(firstSet.get(lookFor).contains("<empty>") ){
           System.out.println("key is "+ key+ " and it lookFor is "+lookFor+ " which contains <empty>");
           //exists = true;
@@ -343,8 +354,9 @@ public class PredictionMaker{
   }
   
   cascadeEdgeInit();
-  trolling();
+  
   normalizeTrollSet();
+  trolling();
  }
 
 
