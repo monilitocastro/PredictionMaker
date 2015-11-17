@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
  private Hashtable<String, Set<String> > firstSet;
+ private Hashtable<String, Set<String> > trollSet;
  private Set<String> nonterminals;
  private Set<String> tokens;
  private Set<String> terminals;
@@ -159,6 +160,47 @@ public class PredictionMaker{
      }
    }
  }
+ 
+//++++++++
+  private void cascadeEdgeInit(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     cascadeEdge(key);
+   }
+ }
+
+ 
+  private void cascadeEdge(String key){
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       boolean loop = true;
+       while(itS2.hasNext() & loop){
+         loop = false;
+         String token = itS2.next();
+         if(hasEmpty.contains(token) ){
+           loop = true;
+
+         }else{
+           //add token to key's entry for last token for later evaluation
+           Set<String> entry;
+           if(!trollSet.containsKey(key) ){
+             entry = new HashSet<String>();
+             entry.add(token);
+             trollSet.put(key, entry);
+           }else{
+             entry = trollSet.get(key);
+             entry.add(token);
+           }
+         }
+       }
+    }
+ }
+  //+++++++++
 
  private void generateNonterminals(){
   Set<String> keys = grammar.keySet();
@@ -185,6 +227,7 @@ public class PredictionMaker{
   terminals = new HashSet<String>();
   nonterminals = new HashSet<String>();
   firstSet = new Hashtable<String, Set<String> >();
+  trollSet = new Hashtable<String, Set<String> >();
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
   terminals.add("<empty>");
   File file = new File(fileName);
@@ -233,6 +276,7 @@ public class PredictionMaker{
     cascadeInit();
     //generateCascadingConjunctions();
   }
+  cascadeEdgeInit();
  }
 
 
