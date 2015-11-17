@@ -28,7 +28,65 @@ public class PredictionMaker{
      if(!term.equals(""))firstSet.put( term, createFirstSet);
    }
  }
+  private void cullEmptyNonterminals(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> keyIt = keys.iterator();
+   while(keyIt.hasNext() ){
+     String key = keyIt.next();
+     boolean isEmpty = false;
+     LinkedList< LinkedList<String> > disjunction = grammar.get(key);
+     Iterator<LinkedList<String> > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS = conjunction.iterator();
+       while(itS.hasNext() ){
+         String token = itS.next();
+         if(token.equals("<empty>") ){
+           isEmpty = true;
+         }
+       }
+     }
+     if(!isEmpty){
+       firstSet.get(key).remove("<empty>");
+     }
+   }
+ }
+  
+//++++++++
+  private void cascadeInit(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     cascade(key);
+   }
+ }
+
  
+  private void cascade(String key){
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       boolean loop = true;
+       while(itS2.hasNext() & loop){
+         loop = false;
+         String token = itS2.next();
+         System.out.println("key "+ key + " cascade token: "+token);
+         if(hasEmpty.contains(token) ){
+           loop = true;
+           Set<String> setCopy = firstSet.get(token);
+           //if(nonterminals.contains(key) )setCopy.remove("<empty>");
+           firstSet.get(key).addAll(setCopy );
+         }else{
+           if(!itS2.hasNext() )System.out.println("Border key"+ key+ " token "+token);
+         }
+       }
+    }
+ }
+  //+++++++++
+  
   
  private void findFirstNonterminalsInitiate(){
    Set<String> keys = grammar.keySet();
@@ -38,29 +96,7 @@ public class PredictionMaker{
      findFirstNonterminals(key);
    }
  }
- private void cullEmptyNonterminals(){
-   Set<String> keys = grammar.keySet();
-   Iterator<String> keyIt = keys.iterator();
-   while(keyIt.hasNext() ){
-     String key = keyIt.next();
-     boolean hasEmpty = false;
-     LinkedList< LinkedList<String> > disjunction = grammar.get(key);
-     Iterator<LinkedList<String> > itLS = disjunction.iterator();
-     while(itLS.hasNext() ){
-       LinkedList<String> conjunction = itLS.next();
-       Iterator<String> itS = conjunction.iterator();
-       while(itS.hasNext() ){
-         String token = itS.next();
-         if(token.equals("<empty>") ){
-           hasEmpty = true;
-         }
-       }
-     }
-     if(!hasEmpty){
-       firstSet.get(key).remove("<empty>");
-     }
-   }
- }
+
  
   private void findFirstNonterminals(String key){
      LinkedList< LinkedList<String > > disjunction = grammar.get(key);
@@ -87,6 +123,7 @@ public class PredictionMaker{
              s = firstSet.get(key);
            }
            Set<String> setCopy = firstSet.get(term);
+           
            s.addAll(setCopy );
            firstSet.put(key, s);
          }
@@ -132,7 +169,7 @@ public class PredictionMaker{
        LinkedList<String> conjunction = itLS.next();
        Boolean hasAllEmpty = new Boolean(false);
        Set<String> collection = contiguousConjunctionsWithEmpty(conjunction, hasAllEmpty, itS );
-       System.out.println("key "+key + " hasAllEmpty "+hasAllEmpty );
+       //System.out.println("key "+key + " hasAllEmpty "+hasAllEmpty );
        firstSet.get(key).addAll(collection);
      }
    }  
@@ -231,7 +268,9 @@ public class PredictionMaker{
   findFirstNonterminalsInitiate();
   cullEmptyNonterminals();
   generateHasEmpty();
-  for(int i = 0; i < 10; i++){
+  //cascadeInit();
+  for(int i = 0; i < 2; i++){
+    cascadeInit();
     //generateCascadingConjunctions();
   }
  }
