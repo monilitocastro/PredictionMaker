@@ -164,7 +164,7 @@ public class PredictionMaker{
    Iterator<String> itS = keys.iterator();
    while(itS.hasNext()){
      String key = itS.next();
-     if(key.equals("<a>"))System.out.println("HELLLLO!1");
+     //if(key.equals("<a>"))System.out.println("HELLLLO!1");
      cascadeEdge(key);
    }
  }
@@ -178,14 +178,14 @@ public class PredictionMaker{
        Iterator<String> itS2 = conjunction.iterator();
        boolean loop = true;
        while(itS2.hasNext() & loop){
-         if(key.equals("<a>"))System.out.println("HELLLLO!2");
+         //if(key.equals("<a>"))System.out.println("HELLLLO!2");
          loop = false;
          String token = itS2.next();
          if(firstSet.get(token).contains("<empty>") ){
            loop = true;
-           if(key.equals("<a>"))System.out.println("HELLLLO!4 token "+token);
+           //if(key.equals("<a>"))System.out.println("HELLLLO!4 token "+token);
          }else{
-           if(key.equals("<a>"))System.out.println("HELLLLO!3");
+           //if(key.equals("<a>"))System.out.println("HELLLLO!3");
            //add token to key's entry for last token for later evaluation
            Set<String> entry;
            if(!trollSet.containsKey(key) ){
@@ -354,7 +354,6 @@ public class PredictionMaker{
   }
   
   cascadeEdgeInit();
-  
   normalizeTrollSet();
   trolling();
  }
@@ -394,7 +393,7 @@ public class PredictionMaker{
     build.append("\n");
   }
   build.append("Tokens with Empty: "+hasEmpty.toString()+"\n" );
-  //build.append(trollSet.get("<a>").toString() );
+  build.append(trollSet.get("<a>").toString() );
   
   return build.toString();
  }
