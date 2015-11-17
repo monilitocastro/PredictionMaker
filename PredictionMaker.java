@@ -14,10 +14,9 @@ public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
  private Hashtable<String, Set<String> > firstSet;
  private Set<String> nonterminals;
- private Stack<String> stack;
  private Set<String> tokens;
  private Set<String> terminals;
- 
+ private Set<String> hasEmpty;
  private void ruleOneFirstSet(){
    terminals = new HashSet<String>(tokens);
    terminals.removeAll(nonterminals);
@@ -133,7 +132,7 @@ public class PredictionMaker{
        LinkedList<String> conjunction = itLS.next();
        Boolean hasAllEmpty = new Boolean(false);
        Set<String> collection = contiguousConjunctionsWithEmpty(conjunction, hasAllEmpty, itS );
-       System.out.println("key "+key);
+       System.out.println("key "+key + " hasAllEmpty "+hasAllEmpty );
        firstSet.get(key).addAll(collection);
      }
    }  
@@ -148,7 +147,10 @@ public class PredictionMaker{
      if(firstSet.get(term).contains("<empty>") ){
        result.addAll(firstSet.get(term) );
        System.out.println("term " + term+ " firstSet.toString() " + firstSet.get(term).toString() );
-       if(itS.hasNext() )result.remove("<empty>");
+       if(itS.hasNext() & !term.equals("<empty>") ){
+         System.out.println("Removing <empty> on term "+term);
+         result.remove("<empty>");
+       }
      }else{
        if( firstSet.get(term).contains("<empty>") ){
          System.out.println("1 edge term: "+term);
@@ -167,10 +169,21 @@ public class PredictionMaker{
   nonterminals.addAll(keys);
  }
   
+ private void generateHasEmpty(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> keyIt = keys.iterator();
+   while(keyIt.hasNext() ){
+     String key = keyIt.next();
+     if(firstSet.get(key).contains("<empty>") ){
+       hasEmpty.add(key);
+     }
+   }
+ }
  PredictionMaker(String fileName){
   String deriveSymbol="->";
   String lhsDelimiters = " ";
   String orSymbol = " \\| ";
+  hasEmpty = new HashSet<String>();
   tokens=new HashSet<String>();
   terminals = new HashSet<String>();
   nonterminals = new HashSet<String>();
@@ -217,10 +230,12 @@ public class PredictionMaker{
   findFirstTerminals();
   findFirstNonterminalsInitiate();
   cullEmptyNonterminals();
+  generateHasEmpty();
   for(int i = 0; i < 10; i++){
-    generateCascadingConjunctions();
+    //generateCascadingConjunctions();
   }
  }
+
 
 
  public String toString(){
@@ -255,6 +270,7 @@ public class PredictionMaker{
     build.append(firstSet.get(key  ) );
     build.append("\n");
   }
+  build.append("Tokens with Empty: "+hasEmpty.toString() );
   
   
   return build.toString();
