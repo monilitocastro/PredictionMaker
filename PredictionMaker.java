@@ -259,7 +259,7 @@ public class PredictionMaker{
       Iterator<String> itemIt = items.iterator();
       while(itemIt.hasNext() ){
         String lookFor = itemIt.next();
-        System.out.println("key is " + key + " and lookFor "+lookFor);
+        //System.out.println("key is " + key + " and lookFor "+lookFor);
         if(firstSet.get(lookFor).contains("<empty>") ){
           //exists = true;
         }
@@ -297,6 +297,11 @@ public class PredictionMaker{
    Iterator<String> itS = keys.iterator();
    while(itS.hasNext()){
      String key = itS.next();
+     if(key.equals("<empty>") )continue;
+     Set<String> empty = new HashSet<String>();
+     if(!followSet.containsKey(key) ){
+       followSet.put(key, empty);
+     }
      followRuleDescend(key);
    }
  }
@@ -311,12 +316,22 @@ public class PredictionMaker{
        Iterator<String> itS2 = conjunction.iterator();
        while(itS2.hasNext() ){
          String token = itS2.next();
-         if(!prevToken.equals("") ){
+         if(!prevToken.equals("") && !prevToken.equals("<empty>") ){
            Set<String> setCopy = new HashSet<String>(firstSet.get(token));
            setCopy.remove("<empty>");
            followSet.put(prevToken, setCopy );
          }
-         System.out.println("key "+ key +" token " +token);
+         if(!itS2.hasNext() && !token.equals("<empty>") ){
+           //System.out.println("Error on " +key + " contains "+ followSet.containsKey(key) );
+           Set<String> setCopy = new HashSet<String>(followSet.get(key));
+           setCopy.remove("<empty>");
+           followSet.put(token, setCopy );
+           
+           if(firstSet.get(token).contains("<empty>") ){
+             followSet.get(prevToken).addAll(followSet.get(key) );
+           }
+         }
+         //System.out.println("key "+ key +" token " +token);
          prevToken = token;
        }
     }
