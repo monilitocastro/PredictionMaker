@@ -13,11 +13,13 @@ import java.io.FileNotFoundException;
 public class PredictionMaker{
  private Hashtable<String, LinkedList< LinkedList<String> > > grammar;
  private Hashtable<String, Set<String> > firstSet;
+ private Hashtable<String, Set<String> > followSet;
  private Hashtable<String, Set<String> > trollSet;
  private Set<String> nonterminals;
  private Set<String> tokens;
  private Set<String> terminals;
  private Set<String> hasEmpty;
+ private String startSymbol;
  private void ruleOneFirstSet(){
    terminals = new HashSet<String>(tokens);
    terminals.removeAll(nonterminals);
@@ -296,6 +298,9 @@ public class PredictionMaker{
      }
    }
  }
+ 
+ 
+ 
  PredictionMaker(String fileName){
   String deriveSymbol="->";
   String lhsDelimiters = " ";
@@ -304,10 +309,12 @@ public class PredictionMaker{
   tokens=new HashSet<String>();
   terminals = new HashSet<String>();
   nonterminals = new HashSet<String>();
+  followSet = new Hashtable<String, Set<String> >();
   firstSet = new Hashtable<String, Set<String> >();
   trollSet = new Hashtable<String, Set<String> >();
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
   terminals.add("<empty>");
+  boolean isFirstToken = true;
   File file = new File(fileName);
   Scanner sc = null;
   try{
@@ -322,6 +329,13 @@ public class PredictionMaker{
    String line = sc.nextLine();
    String lineArr[] = line.split(deriveSymbol);
    String head = lineArr[0].trim();
+   if(isFirstToken){
+     isFirstToken = false;
+     startSymbol = head;
+     Set<String> dollar = new HashSet<String>();
+     dollar.add("$");
+     followSet.put(head, dollar );
+   }
    String tempRhs = lineArr[lineArr.length-1].trim();
    String orTermsArr[] = tempRhs.split(orSymbol);
    LinkedList< String > orTerms = new LinkedList<String>(Arrays.asList(orTermsArr) );
@@ -368,6 +382,7 @@ public class PredictionMaker{
   StringBuilder build = new StringBuilder();
   Set<String> keys = grammar.keySet();
   Iterator<String> it = keys.iterator();
+  build.append("Start symbol: "+startSymbol+"\n\n");
   while(it.hasNext() ){
    String name = it.next();
    LinkedList<LinkedList<String > > rhs = grammar.get(name);
@@ -392,12 +407,22 @@ public class PredictionMaker{
     String key = it.next();
     build.append(key + " : ");
     Set<String> firstsFor = firstSet.get(key);
-    Iterator<String> itFirst = firstsFor.iterator();
+    //Iterator<String> itFirst = firstsFor.iterator();
     build.append(firstSet.get(key  ) );
     build.append("\n");
   }
-  build.append("Tokens with Empty: "+hasEmpty.toString()+"\n" );
-  build.append(trollSet.get("<a>").toString() );
+  
+  build.append("\nFollow sets\n--------\n");
+  keys = followSet.keySet();
+  it = keys.iterator();
+  while(it.hasNext() ){
+    String key = it.next();
+    build.append(key + " : ");
+    Set<String> followFor = followSet.get(key);
+    //Iterator<String> itFirst = followFor.iterator();
+    build.append(followSet.get(key  ) );
+    build.append("\n");
+  }  
   
   return build.toString();
  }
