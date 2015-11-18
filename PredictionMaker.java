@@ -81,8 +81,6 @@ public class PredictionMaker{
 
          }
          Set<String> setCopy = new HashSet<String>(firstSet.get(token));
-         //setCopy.remove("<empty>");
-         if(key.equals("<e>"))System.out.println("<e> setCopy = "+setCopy.toString() );
          if(nonterminals.contains(key) & itS2.hasNext() ) setCopy.remove("<empty>") ;
          firstSet.get(key).addAll(setCopy );
          if(setCopy.contains("<empty>") )hasEmpty.add(key);
@@ -168,7 +166,6 @@ public class PredictionMaker{
    Iterator<String> itS = keys.iterator();
    while(itS.hasNext()){
      String key = itS.next();
-     //if(key.equals("<a>"))System.out.println("HELLLLO!1");
      cascadeEdge(key);
    }
  }
@@ -182,14 +179,11 @@ public class PredictionMaker{
        Iterator<String> itS2 = conjunction.iterator();
        boolean loop = true;
        while(itS2.hasNext() & loop){
-         //if(key.equals("<a>"))System.out.println("HELLLLO!2");
          loop = false;
          String token = itS2.next();
          if(firstSet.get(token).contains("<empty>") ){
            loop = true;
-           if(key.equals("<a>"))System.out.println("HELLLLO!4 token "+token);
          }else{
-           if(key.equals("<a>"))System.out.println("HELLLLO!3");
            //add token to key's entry for last token for later evaluation
            Set<String> entry;
            if(!trollSet.containsKey(key) ){
@@ -261,14 +255,12 @@ public class PredictionMaker{
     Iterator<String> itKeys = keys.iterator();
     while(itKeys.hasNext() ){
       String key = itKeys.next();
-      System.out.println("key is "+key + " trollSet contains "+ trollSet.get(key).toString() );
       Set<String> items = trollSet.get(key);
       Iterator<String> itemIt = items.iterator();
       while(itemIt.hasNext() ){
         String lookFor = itemIt.next();
         System.out.println("key is " + key + " and lookFor "+lookFor);
         if(firstSet.get(lookFor).contains("<empty>") ){
-          System.out.println("key is "+ key+ " and it lookFor is "+lookFor+ " which contains <empty>");
           //exists = true;
         }
       }
@@ -316,9 +308,9 @@ public class PredictionMaker{
      while(itLS.hasNext() ){
        LinkedList<String> conjunction = itLS.next();
        Iterator<String> itS2 = conjunction.iterator();
-       if(itS2.hasNext() ){
-         String term = itS2.next();
-         
+       while(itS2.hasNext() ){
+         String token = itS2.next();
+         System.out.println("key "+ key +" token " +token);
        }
     }
  }
