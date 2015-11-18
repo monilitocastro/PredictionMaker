@@ -299,6 +299,30 @@ public class PredictionMaker{
    }
  }
  
+ //*****************
+  private void followRuleInit(){
+   Set<String> keys = grammar.keySet();
+   Iterator<String> itS = keys.iterator();
+   while(itS.hasNext()){
+     String key = itS.next();
+     followRuleDescend(key);
+   }
+ }
+
+ 
+  private void followRuleDescend(String key){
+     LinkedList< LinkedList<String > > disjunction = grammar.get(key);
+     Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     while(itLS.hasNext() ){
+       LinkedList<String> conjunction = itLS.next();
+       Iterator<String> itS2 = conjunction.iterator();
+       if(itS2.hasNext() ){
+         String term = itS2.next();
+         
+       }
+    }
+ }
+ //******************
  
  
  PredictionMaker(String fileName){
@@ -375,6 +399,7 @@ public class PredictionMaker{
   normalizeTrollSet();
   trolling();
  }
+
 
 
 
