@@ -305,12 +305,19 @@ public class PredictionMaker{
   private void followRuleDescend(String key){
      LinkedList< LinkedList<String > > disjunction = grammar.get(key);
      Iterator<LinkedList<String > > itLS = disjunction.iterator();
+     String prevToken = "";
      while(itLS.hasNext() ){
        LinkedList<String> conjunction = itLS.next();
        Iterator<String> itS2 = conjunction.iterator();
        while(itS2.hasNext() ){
          String token = itS2.next();
+         if(!prevToken.equals("") ){
+           Set<String> setCopy = new HashSet<String>(firstSet.get(token));
+           setCopy.remove("<empty>");
+           followSet.put(prevToken, setCopy );
+         }
          System.out.println("key "+ key +" token " +token);
+         prevToken = token;
        }
     }
  }
@@ -390,6 +397,10 @@ public class PredictionMaker{
   cascadeEdgeInit();
   normalizeTrollSet();
   trolling();
+  
+  //follow set
+  followRuleInit();
+  
  }
 
 
