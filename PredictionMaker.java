@@ -345,8 +345,18 @@ public class PredictionMaker{
     Iterator<String> itS = nonterminals.iterator();
     while(itS.hasNext() ){
       Hashtable<String, String> t_a  = new Hashtable<String, String>();
-      prTable.put(itS.next(), t_a);
-      
+      String nontermKey = itS.next();
+      prTable.put(nontermKey, t_a);
+      //for each nonterminal iterate per conjunction and find that
+      //conjunction's first set
+      Iterator< LinkedList<String> > itLS = grammar.get(nontermKey).iterator() ;
+      while(itLS.hasNext() ){
+        Set<String > firsts = firstOfConjunction( itLS.next() );
+        if(firsts.contains("<empty>") ){
+          System.out.println("nontermKey " +nontermKey+" contains <empty>.");
+          
+        }
+      }
       //get the first elements of each
     }
   }
