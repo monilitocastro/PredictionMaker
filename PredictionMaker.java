@@ -330,10 +330,11 @@ public class PredictionMaker{
            followSet.put(token, setCopy );
            
            if(firstSet.get(token).contains("<empty>") ){
+             System.out.println("%%token="+token +" prevToken='"+prevToken+"' null(prevToken) = "+(prevToken==null ) );
              followSet.get(prevToken).addAll(followSet.get(key) );
            }
          }
-         //System.out.println("key "+ key +" token " +token);
+         System.out.println("??key "+ key +" token " +token);
          prevToken = token;
        }
     }
@@ -341,9 +342,11 @@ public class PredictionMaker{
  //******************
  
   private void generatePredictionTable(){
+    
     //create nonterminal dimension first
     Iterator<String> itS = nonterminals.iterator();
     while(itS.hasNext() ){
+      Set<String > firstsAndFollows = new HashSet<String>();
       Hashtable<String, String> t_a  = new Hashtable<String, String>();
       String nontermKey = itS.next();
       prTable.put(nontermKey, t_a);
@@ -351,10 +354,15 @@ public class PredictionMaker{
       //conjunction's first set
       Iterator< LinkedList<String> > itLS = grammar.get(nontermKey).iterator() ;
       while(itLS.hasNext() ){
-        Set<String > firsts = firstOfConjunction( itLS.next() );
-        if(firsts.contains("<empty>") ){
-          System.out.println("nontermKey " +nontermKey+" contains <empty>.");
-          
+        
+        firstsAndFollows.addAll(firstOfConjunction( itLS.next() ) );
+        System.out.println(nontermKey+" firstsAndFollows is "+firstsAndFollows.toString() );
+        if(firstsAndFollows.contains("<empty>") ){
+          firstsAndFollows.remove("<empty>");
+          Set<String> basket =followSet.get(nontermKey);
+          System.out.println("basket is "+ basket.toString() );
+          firstsAndFollows.addAll(basket );
+          System.out.println(nontermKey+" : "+firstsAndFollows.toString() );
         }
       }
       //get the first elements of each
@@ -365,7 +373,14 @@ public class PredictionMaker{
     Set<String> basket = new HashSet<String>();
     Iterator<String> itS = conjunction.iterator();
     while(itS.hasNext() ){
-      basket.addAll(firstSet.get(itS.next() ) );
+      String token = itS.next();
+      Set<String> firsts = firstSet.get(token );
+      if(itS.hasNext() && firsts.contains("<empty>") ){
+        firsts.remove("<empty>");
+        System.out.println("*** "+token+" : " + basket.toString() );
+      }
+      basket.addAll(firsts );
+
     }
     return basket;
   }

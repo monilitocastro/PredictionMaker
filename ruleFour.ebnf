@@ -3,6 +3,6 @@
 <c> -> <C> | <empty>
 <d> -> <D> | <empty>
 <e> -> <g> | <h> <i>
-<g> -> <G>
+<g> -> <G> | <empty>
 <h> -> <H> | <empty>
 <i> -> <I>
