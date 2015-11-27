@@ -15,11 +15,13 @@ public class PredictionMaker{
  private Hashtable<String, Set<String> > firstSet;
  private Hashtable<String, Set<String> > followSet;
  private Hashtable<String, Set<String> > trollSet;
+ private Hashtable<String, Hashtable<String, String> > prTable;
  private Set<String> nonterminals;
  private Set<String> tokens;
  private Set<String> terminals;
  private Set<String> hasEmpty;
  private String startSymbol;
+ 
  private void ruleOneFirstSet(){
    terminals = new HashSet<String>(tokens);
    terminals.removeAll(nonterminals);
@@ -338,7 +340,26 @@ public class PredictionMaker{
  }
  //******************
  
+  private void generatePredictionTable(){
+    //create nonterminal dimension first
+    Iterator<String> itS = nonterminals.iterator();
+    while(itS.hasNext() ){
+      Hashtable<String, String> t_a  = new Hashtable<String, String>();
+      prTable.put(itS.next(), t_a);
+      
+      //get the first elements of each
+    }
+  }
  
+  private Set<String> firstOfConjunction( LinkedList<String> conjunction){
+    Set<String> basket = new HashSet<String>();
+    Iterator<String> itS = conjunction.iterator();
+    while(itS.hasNext() ){
+      basket.addAll(firstSet.get(itS.next() ) );
+    }
+    return basket;
+  }
+  
  PredictionMaker(String fileName){
   String deriveSymbol="->";
   String lhsDelimiters = " ";
@@ -347,6 +368,7 @@ public class PredictionMaker{
   tokens=new HashSet<String>();
   terminals = new HashSet<String>();
   nonterminals = new HashSet<String>();
+  prTable = new Hashtable<String, Hashtable<String, String> >();
   followSet = new Hashtable<String, Set<String> >();
   firstSet = new Hashtable<String, Set<String> >();
   trollSet = new Hashtable<String, Set<String> >();
@@ -415,7 +437,7 @@ public class PredictionMaker{
   
   //follow set
   followRuleInit();
-  
+  generatePredictionTable();
  }
 
 
