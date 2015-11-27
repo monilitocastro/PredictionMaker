@@ -330,11 +330,11 @@ public class PredictionMaker{
            followSet.put(token, setCopy );
            
            if(firstSet.get(token).contains("<empty>") ){
-             System.out.println("%%token="+token +" prevToken='"+prevToken+"' null(prevToken) = "+(prevToken==null ) );
+             //System.out.println("%%token="+token +" prevToken='"+prevToken+"' null(prevToken) = "+(prevToken==null ) );
              followSet.get(prevToken).addAll(followSet.get(key) );
            }
          }
-         System.out.println("??key "+ key +" token " +token);
+         //System.out.println("??key "+ key +" token " +token);
          prevToken = token;
        }
     }
@@ -354,21 +354,58 @@ public class PredictionMaker{
       //conjunction's first set
       Iterator< LinkedList<String> > itLS = grammar.get(nontermKey).iterator() ;
       while(itLS.hasNext() ){
-        
-        firstsAndFollows.addAll(firstOfConjunction( itLS.next() ) );
-        System.out.println(nontermKey+" firstsAndFollows is "+firstsAndFollows.toString() );
+        LinkedList<String > conjunction = itLS.next();
+        firstsAndFollows.addAll(firstOfConjunction( conjunction ) );
+        //System.out.println(nontermKey+" firstsAndFollows is "+firstsAndFollows.toString() );
         if(firstsAndFollows.contains("<empty>") ){
           firstsAndFollows.remove("<empty>");
           Set<String> basket =followSet.get(nontermKey);
-          System.out.println("basket is "+ basket.toString() );
+          //System.out.println("basket is "+ basket.toString() );
           firstsAndFollows.addAll(basket );
-          System.out.println(nontermKey+" : "+firstsAndFollows.toString() );
+          //System.out.println(nontermKey+" : "+firstsAndFollows.toString() );
         }
+        Iterator<String> itS2 = firstsAndFollows.iterator();
+        while(itS2.hasNext() ){
+          String elemFirstsFollows = itS2.next();
+          t_a.put(elemFirstsFollows, conjunctionStringRepr(conjunction) );
+          //put into prTable(nontermKey, x) <- conjunction    where x is in firstsAndFollows 
+          
+        }
+
       }
-      //get the first elements of each
+    }
+  }
+  
+  private void createEBNF(){
+    Iterator<String> itKeys = prTable.keySet().iterator();
+    while(itKeys.hasNext() ){
+      String key = itKeys.next();
+      
+      Hashtable<String, String> t_a = prTable.get(key);
+      Iterator<String> itS = t_a.keySet().iterator();
+      while(itS.hasNext() ){
+        String terminal = itS.next();
+        String production = t_a.get(terminal);
+        System.out.println(key+","+terminal+","+production);
+      }
     }
   }
  
+  private String conjunctionStringRepr(LinkedList<String> conjunction ){
+    StringBuilder build = new StringBuilder();
+    Iterator<String> itS = conjunction.iterator();
+    while(itS.hasNext() ){
+      String token = itS.next();
+      if(itS.hasNext() ){
+        build.append(token + " ");
+      }else{
+        build.append(token );
+      }
+    }
+    
+    return build.toString();
+  }
+  
   private Set<String> firstOfConjunction( LinkedList<String> conjunction){
     Set<String> basket = new HashSet<String>();
     Iterator<String> itS = conjunction.iterator();
@@ -377,7 +414,7 @@ public class PredictionMaker{
       Set<String> firsts = firstSet.get(token );
       if(itS.hasNext() && firsts.contains("<empty>") ){
         firsts.remove("<empty>");
-        System.out.println("*** "+token+" : " + basket.toString() );
+        //System.out.println("*** "+token+" : " + basket.toString() );
       }
       basket.addAll(firsts );
 
@@ -463,6 +500,7 @@ public class PredictionMaker{
   //follow set
   followRuleInit();
   generatePredictionTable();
+  createEBNF();
  }
 
 
