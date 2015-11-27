@@ -20,6 +20,7 @@ public class PredictionMaker{
  private Set<String> tokens;
  private Set<String> terminals;
  private Set<String> hasEmpty;
+ private StringBuilder buildEBNF;
  private String startSymbol;
  
  private void ruleOneFirstSet(){
@@ -346,7 +347,7 @@ public class PredictionMaker{
     //create nonterminal dimension first
     Iterator<String> itS = nonterminals.iterator();
     while(itS.hasNext() ){
-      Set<String > firstsAndFollows = new HashSet<String>();
+      
       Hashtable<String, String> t_a  = new Hashtable<String, String>();
       String nontermKey = itS.next();
       prTable.put(nontermKey, t_a);
@@ -354,16 +355,22 @@ public class PredictionMaker{
       //conjunction's first set
       Iterator< LinkedList<String> > itLS = grammar.get(nontermKey).iterator() ;
       while(itLS.hasNext() ){
+        Set<String > firstsAndFollows = new HashSet<String>();
         LinkedList<String > conjunction = itLS.next();
+        if(conjunction.size()==1 && conjunction.contains("<empty>") ){
+          //continue;
+        }
+        String prod = conjunctionStringRepr(conjunction);
         firstsAndFollows.addAll(firstOfConjunction( conjunction ) );
-        //System.out.println(nontermKey+" firstsAndFollows is "+firstsAndFollows.toString() );
+        //System.out.println("firstsAndFollows: " +firstsAndFollows.toString() );
         if(firstsAndFollows.contains("<empty>") ){
           firstsAndFollows.remove("<empty>");
           Set<String> basket =followSet.get(nontermKey);
-          //System.out.println("basket is "+ basket.toString() );
+          System.out.println("basket is "+ basket.toString() );
           firstsAndFollows.addAll(basket );
-          //System.out.println(nontermKey+" : "+firstsAndFollows.toString() );
+          
         }
+        System.out.println(nontermKey+" : "+firstsAndFollows.toString() + " : " + prod );
         Iterator<String> itS2 = firstsAndFollows.iterator();
         while(itS2.hasNext() ){
           String elemFirstsFollows = itS2.next();
@@ -371,7 +378,6 @@ public class PredictionMaker{
           //put into prTable(nontermKey, x) <- conjunction    where x is in firstsAndFollows 
           
         }
-
       }
     }
   }
@@ -386,7 +392,7 @@ public class PredictionMaker{
       while(itS.hasNext() ){
         String terminal = itS.next();
         String production = t_a.get(terminal);
-        System.out.println(key+","+terminal+","+production);
+        //System.out.println(key+","+terminal+","+production);
       }
     }
   }
@@ -402,7 +408,7 @@ public class PredictionMaker{
         build.append(token );
       }
     }
-    
+    //System.out.println("toString="+build.toString() );
     return build.toString();
   }
   
@@ -436,6 +442,7 @@ public class PredictionMaker{
   trollSet = new Hashtable<String, Set<String> >();
   grammar = new Hashtable<String, LinkedList< LinkedList<String> > >();
   terminals.add("<empty>");
+  buildEBNF = new StringBuilder();
   boolean isFirstToken = true;
   File file = new File(fileName);
   Scanner sc = null;
@@ -490,7 +497,6 @@ public class PredictionMaker{
   //cascadeInit();
   for(int i = 0; i < 4; i++){
     cascadeInit();
-    //generateCascadingConjunctions();
   }
   
   cascadeEdgeInit();
@@ -500,7 +506,7 @@ public class PredictionMaker{
   //follow set
   followRuleInit();
   generatePredictionTable();
-  createEBNF();
+  //createEBNF();
  }
 
 
