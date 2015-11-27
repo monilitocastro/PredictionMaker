@@ -323,7 +323,7 @@ public class PredictionMaker{
            setCopy.remove("<empty>");
            followSet.put(prevToken, setCopy );
          }
-         if(!itS2.hasNext() && !token.equals("<empty>") ){
+         if(!itS2.hasNext() && !token.equals("<empty>") && !prevToken.equals("") ){
            //System.out.println("Error on " +key + " contains "+ followSet.containsKey(key) );
            Set<String> setCopy = new HashSet<String>(followSet.get(key));
            setCopy.remove("<empty>");
