@@ -5,6 +5,7 @@ public class test{
      System.out.println("Please specify a filename (e.g. java test pascal2.ebnf");
      System.exit(0);
    }
+  System.out.println("PREDICT TABLE FORMAT:\n<nonterminal> : <TERMINALs encountered> : <PRODUCTION>*");
   PredictionMaker predict = new PredictionMaker(args[0]);
   System.out.println("\n\n"+predict.toString() );
  }

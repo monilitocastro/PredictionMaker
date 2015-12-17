@@ -1,0 +1,319 @@
+PREDICT TABLE FORMAT:
+<nonterminal> : <TERMINALs encountered> : <PRODUCTION>*
+<expression> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>] : <simple_expression>
+<expression> : [<LESSEQUAL>, <NOT_OP>, <LESS>, <ADD_OP>, <ID>, <NOT_EQUAL>, <EQUAL>, <SUBTRACT_OP>, <LITCHAR>, <LPAREN>, <GREATER>, <GREATEQUAL>, <NUMBER>] : <simple_expression> <relational_operator> <simple_expression>
+<semicolon_statement_atom> : [<WRITE>, <READ>, <END>, <ID>, <BEGIN>, <SEMICOLON>, <WHILE>, <IF>] : <SEMICOLON> <statement> <semicolon_statement_atom>
+<semicolon_statement_atom> : [<END>] : <empty>
+<mult_operator_atom> : [<ID>, <NOT_OP>, <DIV>, <MULT_OP>, <AND>, <LITCHAR>, <LPAREN>, <NUMBER>] : <multiplying_operator> <factor> <mult_operator_atom>
+<mult_operator_atom> : [] : <empty>
+<simple_statement> : [<ID>] : <assignment_statement>
+<simple_statement> : [<ID>] : <procedure_statement>
+<simple_statement> : [<READ>] : <read_statement>
+<simple_statement> : [<WRITE>] : <write_statement>
+<array_type> : [<RBRACK>, <ID>, <OF>, <LBRACK>, <ARRAY>, <NUMBER>] : <ARRAY> <LBRACK> <index_range> <RBRACK> <OF> <simple_type>
+<type> : [<ID>] : <simple_type>
+<type> : [<ARRAY>] : <array_type>
+<entire_variable> : [<ID>] : <variable_identifier>
+<statement> : [<WRITE>, <READ>, <ID>] : <simple_statement>
+<statement> : [<BEGIN>, <WHILE>, <IF>] : <structured_statement>
+<comma_outputvariable_atom> : [<output_variable>, <COMMA>, <RPAREN>] : <COMMA> <output_variable> <comma_outputvariable_atom>
+<comma_outputvariable_atom> : [<RPAREN>] : <empty>
+<procedure_statement> : [<ID>] : <procedure_identifier>
+<input_variable> : [<ID>] : <variable>
+<id_comma_atom> : [<ID>, <COMMA>, <COLON>] : <COMMA> <ID> <id_comma_atom>
+<id_comma_atom> : [<COLON>] : <empty>
+<program> : [<VAR>, <PERIOD>, <ID>, <BEGIN>, <PROGRAM>, <SEMICOLON>, <PROCEDURE>] : <PROGRAM> <ID> <SEMICOLON> <block> <PERIOD>
+<procedure_declaration_part> : [<PROCEDURE>, <SEMICOLON>] : <procedure_declaration> <SEMICOLON> <procedure_declaration_part>
+<procedure_declaration_part> : [] : <empty>
+<integer_constant> : [<NUMBER>] : <NUMBER>
+<block> : [<VAR>, <BEGIN>, <PROCEDURE>] : <variable_declaration_part> <procedure_declaration_part> <statement_part>
+<factor> : [<ID>] : <variable>
+<factor> : [<ID>, <LITCHAR>, <NUMBER>] : <constant>
+<factor> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <RPAREN>, <ADD_OP>, <LPAREN>, <NUMBER>] : <LPAREN> <expression> <RPAREN>
+<factor> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>] : <NOT_OP> <factor>
+<relational_operator> : [<EQUAL>] : <EQUAL>
+<relational_operator> : [<NOT_EQUAL>] : <NOT_EQUAL>
+<relational_operator> : [<LESS>] : <LESS>
+<relational_operator> : [<LESSEQUAL>] : <LESSEQUAL>
+<relational_operator> : [<GREATEQUAL>] : <GREATEQUAL>
+<relational_operator> : [<GREATER>] : <GREATER>
+<simple_expression> : [<ID>, <THEN>, <NOT_OP>, <SUBTRACT_OP>, <OR>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>] : <sign> <term> <adding_operator_atom>
+<variable_declaration_part> : [<PROCEDURE>] : <empty>
+<variable_declaration_part> : [<VAR>, <ID>, <PROCEDURE>] : <VAR> <var_decl_atom>
+<array_variable> : [<ID>] : <entire_variable>
+<adding_operator> : [<ADD_OP>] : <ADD_OP>
+<adding_operator> : [<SUBTRACT_OP>] : <SUBTRACT_OP>
+<adding_operator> : [<OR>] : <OR>
+<read_statement> : [<READ>, <ID>, <COMMA>, <RPAREN>, <LPAREN>] : <READ> <LPAREN> <input_variable> <comma_inputvariable_atom> <RPAREN>
+<variable_identifier> : [<ID>] : <ID>
+<simple_type> : [<ID>] : <type_identifier>
+<comma_inputvariable_atom> : [<ID>, <COMMA>] : <COMMA> <input_variable> <comma_inputvariable_atom>
+<comma_inputvariable_atom> : [] : <empty>
+<constant> : [<NUMBER>] : <NUMBER>
+<constant> : [<LITCHAR>] : <LITCHAR>
+<constant> : [<ID>] : <ID>
+<procedure_identifier> : [<ID>] : <ID>
+<compound_statement> : [<WRITE>, <READ>, <ID>, <END>, <BEGIN>, <SEMICOLON>, <WHILE>, <IF>] : <BEGIN> <statement> <semicolon_statement_atom> <END>
+<adding_operator_atom> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <OR>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>] : <adding_operator> <term> <adding_operator_atom>
+<adding_operator_atom> : [] : <empty>
+<statement_part> : [<BEGIN>] : <compound_statement>
+<if_statement> : [<WRITE>, <THEN>, <NOT_OP>, <ADD_OP>, <IF>, <READ>, <ID>, <BEGIN>, <SUBTRACT_OP>, <LITCHAR>, <LPAREN>, <WHILE>, <NUMBER>] : <IF> <expression> <THEN> <statement>
+<if_statement> : [<WRITE>, <THEN>, <ELSE>, <NOT_OP>, <ADD_OP>, <IF>, <READ>, <ID>, <BEGIN>, <SUBTRACT_OP>, <LITCHAR>, <LPAREN>, <WHILE>, <NUMBER>] : <IF> <expression> <THEN> <statement> <ELSE> <statement>
+<structured_statement> : [<BEGIN>] : <compound_statement>
+<structured_statement> : [<IF>] : <if_statement>
+<structured_statement> : [<WHILE>] : <while_statement>
+<assignment_statement> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ASSIGN>, <ADD_OP>, <LPAREN>, <NUMBER>] : <variable> <ASSIGN> <expression>
+<multiplying_operator> : [<MULT_OP>] : <MULT_OP>
+<multiplying_operator> : [<DIV>] : <DIV>
+<multiplying_operator> : [<AND>] : <AND>
+<var_decl_atom> : [<ID>, <SEMICOLON>] : <variable_declaration> <SEMICOLON> <var_decl_atom>
+<var_decl_atom> : [] : <empty>
+<write_statement> : [<WRITE>, <ID>, <NOT_OP>, <SUBTRACT_OP>, <COMMA>, <LITCHAR>, <RPAREN>, <ADD_OP>, <LPAREN>, <NUMBER>] : <WRITE> <LPAREN> <output_value> <comma_outputvariable_atom> <RPAREN>
+<while_statement> : [<WRITE>, <NOT_OP>, <DO>, <ADD_OP>, <IF>, <READ>, <ID>, <BEGIN>, <SUBTRACT_OP>, <LITCHAR>, <LPAREN>, <WHILE>, <NUMBER>] : <WHILE> <expression> <DO> <statement>
+<indexed_variable> : [<ID>, <RBRACK>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <LBRACK>, <ADD_OP>, <LPAREN>, <NUMBER>] : <array_variable> <LBRACK> <expression> <RBRACK>
+<output_value> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>] : <expression>
+<variable> : [<ID>] : <entire_variable>
+<variable> : [<ID>] : <indexed_variable>
+<type_identifier> : [<ID>] : <ID>
+<index_range> : [<RANGE_OP>, <NUMBER>] : <integer_constant> <RANGE_OP> <integer_constant>
+<variable_declaration> : [<ID>, <COMMA>, <ARRAY>, <COLON>] : <ID> <id_comma_atom> <COLON> <type>
+<term> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <DIV>, <MULT_OP>, <OR>, <AND>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>] : <factor> <mult_operator_atom>
+<sign> : [<ADD_OP>] : <ADD_OP>
+<sign> : [<SUBTRACT_OP>] : <SUBTRACT_OP>
+<sign> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>] : <empty>
+<procedure_declaration> : [<VAR>, <ID>, <BEGIN>, <PROCEDURE>, <SEMICOLON>] : <PROCEDURE> <ID> <SEMICOLON> <block>
+
+
+Start symbol: <program>
+
+<index_range> : [  <integer_constant>  <RANGE_OP>  <integer_constant> ]
+<procedure_identifier> : [  <ID> ]
+<program> : [  <PROGRAM>  <ID>  <SEMICOLON>  <block>  <PERIOD> ]
+<id_comma_atom> : [  <COMMA>  <ID>  <id_comma_atom>  |  <empty> ]
+<procedure_statement> : [  <procedure_identifier> ]
+<sign> : [  <ADD_OP>  |  <SUBTRACT_OP>  |  <empty> ]
+<read_statement> : [  <READ>  <LPAREN>  <input_variable>  <comma_inputvariable_atom>  <RPAREN> ]
+<comma_outputvariable_atom> : [  <COMMA>  <output_variable>  <comma_outputvariable_atom>  |  <empty> ]
+<while_statement> : [  <WHILE>  <expression>  <DO>  <statement> ]
+<procedure_declaration> : [  <PROCEDURE>  <ID>  <SEMICOLON>  <block> ]
+<output_value> : [  <expression> ]
+<array_type> : [  <ARRAY>  <LBRACK>  <index_range>  <RBRACK>  <OF>  <simple_type> ]
+<variable_declaration> : [  <ID>  <id_comma_atom>  <COLON>  <type> ]
+<statement_part> : [  <compound_statement> ]
+<term> : [  <factor>  <mult_operator_atom> ]
+<simple_expression> : [  <sign>  <term>  <adding_operator_atom> ]
+<type> : [  <simple_type>  |  <array_type> ]
+<simple_type> : [  <type_identifier> ]
+<variable> : [  <entire_variable>  |  <indexed_variable> ]
+<structured_statement> : [  <compound_statement>  |  <if_statement>  |  <while_statement> ]
+<mult_operator_atom> : [  <multiplying_operator>  <factor>  <mult_operator_atom>  |  <empty> ]
+<indexed_variable> : [  <array_variable>  <LBRACK>  <expression>  <RBRACK> ]
+<variable_declaration_part> : [  <empty>  |  <VAR>  <var_decl_atom> ]
+<simple_statement> : [  <assignment_statement>  |  <procedure_statement>  |  <read_statement>  |  <write_statement> ]
+<var_decl_atom> : [  <variable_declaration>  <SEMICOLON>  <var_decl_atom>  |  <empty> ]
+<if_statement> : [  <IF>  <expression>  <THEN>  <statement>  |  <IF>  <expression>  <THEN>  <statement>  <ELSE>  <statement> ]
+<adding_operator> : [  <ADD_OP>  |  <SUBTRACT_OP>  |  <OR> ]
+<block> : [  <variable_declaration_part>  <procedure_declaration_part>  <statement_part> ]
+<constant> : [  <NUMBER>  |  <LITCHAR>  |  <ID> ]
+<array_variable> : [  <entire_variable> ]
+<semicolon_statement_atom> : [  <SEMICOLON>  <statement>  <semicolon_statement_atom>  |  <empty> ]
+<multiplying_operator> : [  <MULT_OP>  |  <DIV>  |  <AND> ]
+<relational_operator> : [  <EQUAL>  |  <NOT_EQUAL>  |  <LESS>  |  <LESSEQUAL>  |  <GREATEQUAL>  |  <GREATER> ]
+<integer_constant> : [  <NUMBER> ]
+<expression> : [  <simple_expression>  |  <simple_expression>  <relational_operator>  <simple_expression> ]
+<type_identifier> : [  <ID> ]
+<factor> : [  <variable>  |  <constant>  |  <LPAREN>  <expression>  <RPAREN>  |  <NOT_OP>  <factor> ]
+<comma_inputvariable_atom> : [  <COMMA>  <input_variable>  <comma_inputvariable_atom>  |  <empty> ]
+<assignment_statement> : [  <variable>  <ASSIGN>  <expression> ]
+<variable_identifier> : [  <ID> ]
+<write_statement> : [  <WRITE>  <LPAREN>  <output_value>  <comma_outputvariable_atom>  <RPAREN> ]
+<adding_operator_atom> : [  <adding_operator>  <term>  <adding_operator_atom>  |  <empty> ]
+<procedure_declaration_part> : [  <procedure_declaration>  <SEMICOLON>  <procedure_declaration_part>  |  <empty> ]
+<statement> : [  <simple_statement>  |  <structured_statement> ]
+<input_variable> : [  <variable> ]
+<entire_variable> : [  <variable_identifier> ]
+<compound_statement> : [  <BEGIN>  <statement>  <semicolon_statement_atom>  <END> ]
+
+First sets
+--------
+<adding_operator_atom> : [<SUBTRACT_OP>, <OR>, <empty>, <ADD_OP>]
+<index_range> : [<NUMBER>]
+<PROGRAM> : [<PROGRAM>]
+<sign> : [<SUBTRACT_OP>, <ADD_OP>]
+<write_statement> : [<WRITE>]
+<entire_variable> : [<ID>]
+<compound_statement> : [<BEGIN>]
+<statement_part> : [<BEGIN>]
+<PERIOD> : [<PERIOD>]
+<variable_declaration> : [<ID>]
+<simple_type> : [<ID>]
+<LESSEQUAL> : [<LESSEQUAL>]
+<BEGIN> : [<BEGIN>]
+<WRITE> : [<WRITE>]
+<NOT_OP> : [<NOT_OP>]
+<LITCHAR> : [<LITCHAR>]
+<NOT_EQUAL> : [<NOT_EQUAL>]
+<VAR> : [<VAR>]
+<ELSE> : [<ELSE>]
+<constant> : [<ID>, <LITCHAR>, <NUMBER>]
+<DO> : [<DO>]
+<block> : [<VAR>, <BEGIN>, <PROCEDURE>]
+<input_variable> : [<ID>]
+<THEN> : [<THEN>]
+<procedure_declaration_part> : [<PROCEDURE>]
+<RBRACK> : [<RBRACK>]
+<relational_operator> : [<LESSEQUAL>, <NOT_EQUAL>, <EQUAL>, <LESS>, <GREATER>, <GREATEQUAL>]
+<LBRACK> : [<LBRACK>]
+<ARRAY> : [<ARRAY>]
+<RANGE_OP> : [<RANGE_OP>]
+<EQUAL> : [<EQUAL>]
+<WHILE> : [<WHILE>]
+<procedure_identifier> : [<ID>]
+<READ> : [<READ>]
+<comma_outputvariable_atom> : [<COMMA>]
+<OF> : [<OF>]
+<PROCEDURE> : [<PROCEDURE>]
+<integer_constant> : [<NUMBER>]
+<GREATEQUAL> : [<GREATEQUAL>]
+<COLON> : [<COLON>]
+<ASSIGN> : [<ASSIGN>]
+<OR> : [<OR>]
+<simple_expression> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<output_variable> : [<output_variable>]
+<SUBTRACT_OP> : [<SUBTRACT_OP>]
+<type> : [<ID>, <ARRAY>]
+<array_variable> : [<ID>]
+<LESS> : [<LESS>]
+<variable> : [<ID>]
+<multiplying_operator> : [<DIV>, <MULT_OP>, <AND>]
+<procedure_declaration> : [<PROCEDURE>]
+<mult_operator_atom> : [<DIV>, <MULT_OP>, <AND>, <empty>]
+<AND> : [<AND>]
+<MULT_OP> : [<MULT_OP>]
+<IF> : [<IF>]
+<variable_declaration_part> : [<VAR>]
+<term> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>]
+<GREATER> : [<GREATER>]
+<structured_statement> : [<BEGIN>, <WHILE>, <IF>]
+<COMMA> : [<COMMA>]
+<RPAREN> : [<RPAREN>]
+<LPAREN> : [<LPAREN>]
+<id_comma_atom> : [<COMMA>]
+<if_statement> : [<IF>]
+<procedure_statement> : [<ID>]
+<END> : [<END>]
+<variable_identifier> : [<ID>]
+<while_statement> : [<WHILE>]
+<statement> : [<WRITE>, <READ>, <ID>, <BEGIN>, <WHILE>, <IF>]
+<NUMBER> : [<NUMBER>]
+<expression> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<empty> : [<empty>]
+<program> : [<PROGRAM>]
+<read_statement> : [<READ>]
+<var_decl_atom> : [<ID>, <empty>]
+<semicolon_statement_atom> : [<SEMICOLON>]
+<array_type> : [<ARRAY>]
+<DIV> : [<DIV>]
+<ADD_OP> : [<ADD_OP>]
+<simple_statement> : [<WRITE>, <READ>, <ID>]
+<ID> : [<ID>]
+<output_value> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<assignment_statement> : [<ID>]
+<comma_inputvariable_atom> : [<COMMA>]
+<SEMICOLON> : [<SEMICOLON>]
+<factor> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>]
+<indexed_variable> : [<ID>]
+<type_identifier> : [<ID>]
+<adding_operator> : [<SUBTRACT_OP>, <OR>, <ADD_OP>]
+
+Follow sets
+--------
+<adding_operator_atom> : []
+<index_range> : [<RBRACK>]
+<PROGRAM> : [<ID>]
+<sign> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>]
+<write_statement> : []
+<compound_statement> : [<IF>]
+<entire_variable> : [<ID>]
+<statement_part> : []
+<PERIOD> : [$]
+<variable_declaration> : [<SEMICOLON>]
+<simple_type> : [<ARRAY>]
+<LESSEQUAL> : [<GREATEQUAL>]
+<BEGIN> : [<WRITE>, <READ>, <ID>, <BEGIN>, <WHILE>, <IF>]
+<WRITE> : [<LPAREN>]
+<NOT_OP> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>]
+<NOT_EQUAL> : [<LESS>]
+<LITCHAR> : [<ID>]
+<VAR> : [<ID>]
+<ELSE> : [<WRITE>, <READ>, <ID>, <BEGIN>, <WHILE>, <IF>]
+<constant> : [<LPAREN>]
+<DO> : [<WRITE>, <READ>, <ID>, <BEGIN>, <WHILE>, <IF>]
+<block> : []
+<input_variable> : [<COMMA>, <RPAREN>]
+<THEN> : [<WRITE>, <READ>, <ID>, <BEGIN>, <WHILE>, <IF>]
+<procedure_declaration_part> : []
+<RBRACK> : []
+<relational_operator> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<LBRACK> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<ARRAY> : [<LBRACK>]
+<EQUAL> : [<NOT_EQUAL>]
+<RANGE_OP> : [<NUMBER>]
+<WHILE> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<procedure_identifier> : []
+<READ> : [<LPAREN>]
+<comma_outputvariable_atom> : [<RPAREN>]
+<OF> : [<ID>]
+<PROCEDURE> : [<ID>]
+<GREATEQUAL> : [<GREATER>]
+<integer_constant> : []
+<COLON> : [<ID>, <ARRAY>]
+<ASSIGN> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<OR> : []
+<output_variable> : [<COMMA>]
+<simple_expression> : [<THEN>]
+<SUBTRACT_OP> : [<OR>]
+<type> : []
+<LESS> : [<LESSEQUAL>]
+<array_variable> : [<LBRACK>]
+<variable> : [<ASSIGN>]
+<multiplying_operator> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>]
+<procedure_declaration> : [<SEMICOLON>]
+<AND> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>]
+<mult_operator_atom> : []
+<MULT_OP> : [<DIV>]
+<IF> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<variable_declaration_part> : [<PROCEDURE>]
+<GREATER> : []
+<term> : [<SUBTRACT_OP>, <OR>, <ADD_OP>]
+<COMMA> : [<ID>]
+<structured_statement> : [<SEMICOLON>]
+<RPAREN> : []
+<LPAREN> : [<ID>, <NOT_OP>, <SUBTRACT_OP>, <LITCHAR>, <ADD_OP>, <LPAREN>, <NUMBER>]
+<id_comma_atom> : [<COLON>]
+<if_statement> : [<WHILE>]
+<procedure_statement> : [<READ>]
+<END> : [<IF>]
+<variable_identifier> : []
+<while_statement> : []
+<statement> : [<SEMICOLON>]
+<NUMBER> : [<LITCHAR>]
+<expression> : [<ID>]
+<program> : [$]
+<read_statement> : [<WRITE>]
+<var_decl_atom> : []
+<semicolon_statement_atom> : [<END>]
+<array_type> : []
+<DIV> : [<AND>]
+<ADD_OP> : [<SUBTRACT_OP>]
+<simple_statement> : [<BEGIN>, <WHILE>, <IF>]
+<ID> : []
+<output_value> : [<COMMA>]
+<assignment_statement> : [<ID>]
+<comma_inputvariable_atom> : []
+<SEMICOLON> : [<BEGIN>, <PROCEDURE>]
+<factor> : [<DIV>, <MULT_OP>, <AND>]
+<type_identifier> : []
+<indexed_variable> : []
+<adding_operator> : [<ID>, <NOT_OP>, <LITCHAR>, <LPAREN>, <NUMBER>]
+

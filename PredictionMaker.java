@@ -366,7 +366,7 @@ public class PredictionMaker{
         if(firstsAndFollows.contains("<empty>") ){
           firstsAndFollows.remove("<empty>");
           Set<String> basket =followSet.get(nontermKey);
-          System.out.println("basket is "+ basket.toString() );
+          //System.out.println("basket is "+ basket.toString() );
           firstsAndFollows.addAll(basket );
           
         }

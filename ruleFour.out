@@ -1,0 +1,61 @@
+PREDICT TABLE FORMAT:
+<nonterminal> : <TERMINALs encountered> : <PRODUCTION>*
+<i> : [<I>] : <I>
+<h> : [<H>] : <H>
+<h> : [<I>] : <empty>
+<c> : [<C>] : <C>
+<c> : [<D>] : <empty>
+<b> : [<B>] : <B>
+<b> : [<C>] : <empty>
+<g> : [<G>] : <G>
+<d> : [<D>] : <D>
+<d> : [<G>, <H>, <I>] : <empty>
+<e> : [<G>] : <g>
+<e> : [<H>, <I>] : <h> <i>
+<a> : [<D>, <B>, <C>, <G>, <H>, <I>] : <b> <c> <d> <e>
+
+
+Start symbol: <a>
+
+<a> : [  <b>  <c>  <d>  <e> ]
+<g> : [  <G> ]
+<b> : [  <B>  |  <empty> ]
+<h> : [  <H>  |  <empty> ]
+<c> : [  <C>  |  <empty> ]
+<i> : [  <I> ]
+<d> : [  <D>  |  <empty> ]
+<e> : [  <g>  |  <h>  <i> ]
+
+First sets
+--------
+<C> : [<C>]
+<h> : [<H>]
+<e> : [<G>, <H>, <I>]
+<b> : [<B>]
+<H> : [<H>]
+<empty> : [<empty>]
+<B> : [<B>]
+<g> : [<G>]
+<d> : [<D>]
+<a> : [<D>, <C>, <B>, <G>, <H>, <I>]
+<G> : [<G>]
+<D> : [<D>]
+<i> : [<I>]
+<c> : [<C>]
+<I> : [<I>]
+
+Follow sets
+--------
+<C> : []
+<h> : [<I>]
+<e> : [$]
+<b> : [<C>]
+<H> : []
+<B> : []
+<g> : [<H>]
+<d> : [<G>, <H>, <I>]
+<a> : [$]
+<D> : []
+<i> : [$]
+<c> : [<D>]
+
